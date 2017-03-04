@@ -3,6 +3,7 @@
   header("Content-Type: text/html; charset=UTF-8");
 
 	require "DB_access.php";
+	require "DB_conf.php";
 
 	$url_page = $_SERVER['PHP_SELF'];
 

@@ -2,10 +2,19 @@
 
 	function db_connect()
 	{
+		// global $host;
+		// global $dbname;
+		// global $user;
+		// global $pw;
+		$host = "localhost";
+		$dbname = "boulangerie";
+		$user = "root";
+		$pw = "root";
 		try
 		{
 			// connection à base de donnée PDO
-			$db = new PDO ('mysql:host = localhost; dbname = boulangerie', 'root', 'root',array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+			// les infos de connexion ci-dessous dans un fichier séparé DB_conf.php
+			$db = new PDO ("mysql:host = $host; dbname = $dbname", $user, $pw, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 			return $db;
 		}
 		catch (PDOException $e)
