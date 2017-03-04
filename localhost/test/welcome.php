@@ -1,28 +1,28 @@
 <?php
 	ini_set('default_charset', 'UTF-8');
   header("Content-Type: text/html; charset=UTF-8");
-	 
-	require "DB_access2.php";
-  
+
+	require "DB_access.php";
+
 	$url_page = $_SERVER['PHP_SELF'];
-	
+
 	/*
 	- Faire authentification avant d'avoir accès aux données (tables)
 	- options d'affichage en fonction du type d'utilisateur et du moment où il se connecte à la base:
 	- Options clients --> Nombre de produit / Prix total et envoyer la commande (si encore dans les temps)
 	- Si plus dans les temps, le clients voit sa denière commande et n'a pas l'option de "passer la commande"
 	*/
-	
+
 	if(validation_utilisateur())
 	{
 		// TODO: Extraire les spécifications de utilisateurs de base de donnée utilisateur dans validation_utilisateur()
 		// Test: mockup qui contient les spécifications des utilisateurs
 		$utilisateur['nom'] = "Sémon";
 		$utilisateur['prenom'] = "Thierry";
-		$utilisateur['type'] = "manager"; //"manager"
-		
+		$utilisateur['type'] = "client"; //"manager"
+
 		$db = db_connect();
-	
+
 		if ($utilisateur['type'] == "manager")
 		{
 			if(isset($_POST['nom']) && isset($_POST['quantite']))
@@ -35,7 +35,7 @@
 			}
 			// Récupère contenu de la table produits
 			$result = $db->query('SELECT * FROM boulangerie.produits');
-			
+
 			// Récupère contenu des commandes en cours
 			//$result2 = $db->query('SELECT * FROM boulangerie.commandes');
 		}
@@ -64,10 +64,10 @@
 		if ($utilisateur['type'] == "manager") //le boulanger
 		{
 			$modifier = 0;
-			if (isset($_GET['modifier']) && is_scalar($_GET['modifier'])) 
+			if (isset($_GET['modifier']) && is_scalar($_GET['modifier']))
 			{
 				$st = $db->prepare("SELECT nom, quantite FROM boulangerie.produits WHERE (id = ?)");
-				if ($st && $st->execute(array($_GET['modifier']))) 
+				if ($st && $st->execute(array($_GET['modifier'])))
 				{
 					$row = $st->fetch(PDO::FETCH_ASSOC);
 					if (isset($row['nom']) && isset($row['quantite'])) {
@@ -80,10 +80,10 @@
 					<p><label for="nom">Nom du produit: </label><input type="text" name="nom" id="nom" value="<?php if (isset($nom)) { echo htmlentities($nom); } ?>" />
 					<label for="quantite">Quantité max: </label><input type="text" name="quantite" value="<?php if (isset($quantite)) { echo htmlentities($quantite); } ?>" />
 					<input type="submit" />
-					</p>         
+					</p>
 				</form>
 				<?php
-			
+
 			}
 			// Affichage contenu de la table produits disponibles
 			echo '<p><strong>Lise des produits à disposition:</strong ></p>';
@@ -118,15 +118,15 @@
 							'</td><td>' . htmlentities($produit['prix']) .
 							'</td><td>' . htmlentities($produit['quantite']) .
 							//'</td><td>' . htmlentities($produit['quantite restante']) .
-							
+
 							'</td></tr>';
 			}
 			echo '</table>';
-			
+
 			// produit possible a commander avec "scroll bar" pour la selection du produit et indication du nombre de produit souhaitée
-			 
+
 			// Résumé de la commande en cours avec les produits sélectionnés et le prix total
-			 
+
 			//bouton "Passer la commande" --> "Ajout du/des produit(s) commandé(s) par le client dans table des commandes
 		}
 	?>
