@@ -10,6 +10,10 @@
 		$dbname = "boulangerie";
 		$user = "root";
 		$pw = "root";
+
+		/*
+		 *Problème avec $host et$dbname: je peux mettre n'importe quoi dans ces 2 variables et la connexion se fait quand même ???
+		 */
 		try
 		{
 			// connection à base de donnée PDO

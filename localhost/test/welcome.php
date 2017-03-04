@@ -20,7 +20,7 @@
 		// Test: mockup qui contient les spécifications des utilisateurs
 		$utilisateur['nom'] = "Sémon";
 		$utilisateur['prenom'] = "Thierry";
-		$utilisateur['type'] = "client"; //"manager"
+		$utilisateur['type'] = "manager"; //"manager"
 
 		$db = db_connect();
 
