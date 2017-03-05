@@ -22,7 +22,7 @@ if(validation_utilisateur())
 	$utilisateur['prenom'] = "Thierry";
 	$utilisateur['entreprise'] = "Moulin SA";
 	//!!!!!Changer manuellement le type de l'utilisateur (client ou manager) pour simuler les interfaces!!!!
-	$utilisateur['type'] = "client"; //"manager"
+	$utilisateur['type'] = "client"; //"manager" ou "client"
 
 	$db = db_connect();
 
@@ -144,20 +144,20 @@ if(validation_utilisateur())
 				}
 				print_r ($produitChoisi);
 				/* On récupère si il existe le nom du produit commandé par le formulaire */
-				$prodcommande = isset($_POST['nom'])?$_POST['nom']:null;
+				$prodcommande = isset($_POST['nomform'])?$_POST['nomform']:null;
 				echo "<p> Produit commandé: " . $prodcommande . "</p>";
 				?>
 				<form action="<?php echo $url_page ?>" method="post" id="commande">
 					<fieldset style="border: 3px double #333399">
 						<legend>Sélectionnez un produit</legend>
 							<?php
-							echo '<select name="' . urlencode(nom) . '" onchange="document.forms[\'commande\'].submit();">';
+							echo '<select name="' . urlencode(nomform) . '" onchange="document.forms[\'commande\'].submit();">';
 							foreach($produitChoisi as $key => $value)
 							{
 								echo '<option value=' . htmlentities($key) . ' ' . ((isset($prodcommande) && $prodcommande == $key)?" selected=\"selected\"":null) . '>' . htmlentities($key) . '</option>';
 							}
 							echo '</select>';
-							echo '<select name="quantite">';
+							echo '<select name="quantiteform">';
 							// for ($i=1; $i<$produitChoisi[ ; $<$produitChoisi[1) { <$produitChoisi[							# code...
 							// }
 							echo '<option value=' . $produitChoisi[$prodcommande] . '>' . $produitChoisi[$prodcommande] . '</option>';
@@ -233,6 +233,6 @@ if(validation_utilisateur())
 	</body>
 	</html>
 	<?php
-	$result -> closeCursor ();
+	$result->closeCursor();
 	//unset($db);
 	?>
