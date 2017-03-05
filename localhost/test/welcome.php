@@ -144,14 +144,15 @@
 				}
 				print_r ($produitChoisi);
 				?>
-				<form action="<?php echo $url_page ?>" method="post">
+				<form action="<?php echo $url_page ?>" method="post" id="commande">
 					<p><label for="nom">Nom du produit: </label><input type="text" name="nom" id="nom" value="<?php if (isset($nom)) { echo htmlentities($nom); } ?>" />
 					<label for="quantite">Quantité max: </label><input type="text" name="quantite" value="<?php if (isset($quantite)) { echo htmlentities($quantite); } ?>" />
 					<input type="submit" />
 					</p>
 				</form>
 				<?php
-				echo '<select name="nom">';
+				// echo '<select name="nom">';
+				echo "<select name=\"nom\" onchange=\"document.forms['commande'].submit();\">";
 				foreach($produitChoisi as $key => $value)
 				{
 					echo '<option value = ' . $key. '>' .$key. '</option>';

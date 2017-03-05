@@ -36,7 +36,7 @@
 	{
 		//Possibilité de passer des commandes entre 6h et 8h du matin
 		$ouvert = 60000; //06:00:00
-		$ferme  = 110000; //08:00:00
+		$ferme  = 230000; //08:00:00
 
     $currentTime = (int) date('Gis');
 
