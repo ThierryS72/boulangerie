@@ -32,6 +32,27 @@
 		return 1;
 	}
 
+	function check_time()
+	{
+		//Possibilité de passer des commandes entre 6h et 8h du matin
+		$ouvert = 60000; //06:00:00
+		$ferme  = 110000; //08:00:00
+
+    $currentTime = (int) date('Gis');
+
+		if ($currentTime > $ouvert && $currentTime < $ferme )
+		{
+				$status=1;
+		}
+		else
+		{
+				$status=0;
+		}
+		return $status;
+	}
+
+
+
 	function a($u, $t, $a) {
 		$callback = function($x) use ($a) {
       return urlencode($x) . "=" . urlencode($a[$x]);

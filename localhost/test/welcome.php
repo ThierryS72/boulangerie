@@ -2,7 +2,7 @@
 	ini_set('default_charset', 'UTF-8');
   header("Content-Type: text/html; charset=UTF-8");
 
-	require "DB_access.php";
+	require "fonctions.php";
 	require "DB_conf.php";
 
 	$url_page = $_SERVER['PHP_SELF'];
@@ -20,11 +20,13 @@
 		// Test: mockup qui contient les spécifications des utilisateurs
 		$utilisateur['nom'] = "Sémon";
 		$utilisateur['prenom'] = "Thierry";
-		$utilisateur['type'] = "manager"; //"manager"
+		$utilisateur['entreprise'] = "Moulin SA";
+		//!!!!!Changer manuellement le type de l'utilisateur (client ou manager) pour simuler les interfaces!!!!
+		$utilisateur['type'] = "client"; //"manager"
 
 		$db = db_connect();
 
-		if ($utilisateur['type'] == "manager")
+		if ($utilisateur['type'] == "manager") //manager
 		{
 			if(isset($_POST['nom']) && isset($_POST['quantite']))
 			{
@@ -42,10 +44,16 @@
 		}
 		else
 		{
-			// Récupère contenu de la table produits dont la quantité est supérieure à 0
-			$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
+			if (check_time() && ($utilisateur['type'] = "client"))
+			{
+				// Récupère contenu de la table produits dont la quantité est supérieure à 0
+				$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
 		}
-	}
+		else
+		{
+			echo "Désolé les commandes ne sont possibles qu'entre 6 heures et 8 heures du matin!";
+		}
+	} }
 	else
 	{
 		echo 'Utilisateur non-valide!';
@@ -106,6 +114,61 @@
 		}
 		else //Les clients
 		{
+			if (check_time() && ($utilisateur['type'] = "client"))
+			{
+				// Affichage contenu de la commande en cours
+				if(isset($produits_commande))
+				{
+					echo '<p><strong>Commande en cours:</strong ></p>';
+					echo '<table border=1>';
+					echo '<tr><th bgcolor = \"#CCCCFF\">nom du produit</td>
+						 <th bgcolor = \"#CCCCFF\">nombre</td>
+						 <th bgcolor = \"#CCCCFF\">Prix</td>
+						 <tr>';
+					foreach ($produits_commande as $produitC)
+					{
+						echo '<tr><td>' . htmlentities($produitC['nom']) .
+									'</td><td>' . htmlentities($produitC['quantite']) .
+									'</td><td>' . htmlentities($produitC['prix']) .
+									'</td></tr>';
+					}
+					echo '</table>';
+				}
+				$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
+				while($row = $result->fetch(PDO::FETCH_ASSOC))
+				{
+						$clé = $row['nom'];
+						$valeur = $row['quantite'];
+						//prix : $valeur = $row['quantite'];
+						$produitChoisi[$clé] = $valeur;
+				}
+				print_r ($produitChoisi);
+				?>
+				<form action="<?php echo $url_page ?>" method="post">
+					<p><label for="nom">Nom du produit: </label><input type="text" name="nom" id="nom" value="<?php if (isset($nom)) { echo htmlentities($nom); } ?>" />
+					<label for="quantite">Quantité max: </label><input type="text" name="quantite" value="<?php if (isset($quantite)) { echo htmlentities($quantite); } ?>" />
+					<input type="submit" />
+					</p>
+				</form>
+				<?php
+				echo '<select name="nom">';
+				foreach($produitChoisi as $key => $value)
+				{
+					echo '<option value = ' . $key. '>' .$key. '</option>';
+				}
+				echo '</select>';
+
+				echo '<select name="quantite">';
+				foreach($produitChoisi as $key => $value)
+				{
+					echo '<option value = ' . $value. '>' .$value. '</option>';
+				}
+				echo '</select>';
+		/*
+		* partie à effacer -> fonctionnement avant l'introduction du contrôle du temps
+		*
+		else //Les clients
+		{
 			// Affichage contenu de la table produits commandables
 			echo '<p><strong>Lise des produits commandables:</strong ></p>';
 			echo '<table border=1>';
@@ -123,6 +186,8 @@
 							'</td></tr>';
 			}
 			echo '</table>';
+			* fin partie à effacer
+			*/
 
 			// produit possible a commander avec "scroll bar" pour la selection du produit et indication du nombre de produit souhaitée
 
@@ -130,6 +195,7 @@
 
 			//bouton "Passer la commande" --> "Ajout du/des produit(s) commandé(s) par le client dans table des commandes
 		}
+	}
 	?>
 	</body>
 </html>
