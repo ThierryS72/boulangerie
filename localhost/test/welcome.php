@@ -154,7 +154,7 @@ if(validation_utilisateur())
 							echo '<select name="' . urlencode(nomform) . '" onchange="document.forms[\'commande\'].submit();">';
 							foreach($produitChoisi as $key => $value)
 							{
-								echo '<option value=' . htmlentities($key) . ' ' . ((isset($prodcommande) && $prodcommande == $key)?" selected=\"selected\"":null) . '>' . htmlentities($key) . '</option>';
+								echo '<option value="' . htmlentities($key) . '" ' . ((isset($prodcommande) && $prodcommande == $key)?" selected=\"selected\"":null) . '>' . htmlentities($key) . '</option>';
 							}
 							echo '</select>';
 							echo '<select name="quantiteform">';
@@ -234,5 +234,5 @@ if(validation_utilisateur())
 	</html>
 	<?php
 	$result->closeCursor();
-	//unset($db);
+	unset($db);
 	?>
