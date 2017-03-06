@@ -151,16 +151,21 @@ if(validation_utilisateur())
 					<fieldset style="border: 3px double #333399">
 						<legend>Sélectionnez un produit</legend>
 							<?php
-							echo '<select name="' . urlencode(nomform) . '" onchange="document.forms[\'commande\'].submit();">';
+							echo '<select name="' . urlencode('nomform') . '" onchange="document.forms[\'commande\'].submit();">';
 							foreach($produitChoisi as $key => $value)
 							{
 								echo '<option value="' . htmlentities($key) . '" ' . ((isset($prodcommande) && $prodcommande == $key)?" selected=\"selected\"":null) . '>' . htmlentities($key) . '</option>';
 							}
 							echo '</select>';
 							echo '<select name="quantiteform">';
-							// for ($i=1; $i<$produitChoisi[ ; $<$produitChoisi[1) { <$produitChoisi[							# code...
-							// }
-							echo '<option value=' . $produitChoisi[$prodcommande] . '>' . $produitChoisi[$prodcommande] . '</option>';
+							// for ($i=1; $i < 5; $i++) {
+							for ($i=1; $i < $produitChoisi[$prodcommande]+1; $i++) {
+							// for ($i=$produitChoisi[$prodcommande]+1; $i > 0; $i--) {
+								// $i = 5;
+								echo '<option value="' .htmlentities($i). '" ' . '>' . htmlentities($i) . '</option>';
+								// echo '<option value="' .$i. '" ' . ((isset($i) && $i == $produitChoisi[$prodcommande])?" selected=\"selected\"":null) . '>' . $i . '</option>';
+							}
+							// echo '<option value=' . $produitChoisi[$prodcommande] . '>' . $produitChoisi[$prodcommande] . '</option>';
 							echo '</select>';
 
 							// echo '<select name="quantite">';
@@ -171,7 +176,7 @@ if(validation_utilisateur())
 							// echo '</select>';
 							?>
 
-							<br /><input type="submit" name="ok" id="ok" value="Commander" />
+							<br /><input type="submit" name="ok" id="ok" value="Sélectionner" />
 						</fieldset>
 					</form>
 
