@@ -1,7 +1,5 @@
 <?php
 session_start(); // a placer en tout premier, avant HTML car utilise un cookie
-ini_set('default_charset', 'UTF-8');
-header("Content-Type: text/html; charset=UTF-8");
 
 require "fonctions.php";
 require "DB_conf.php";
@@ -23,7 +21,7 @@ if(validation_utilisateur())
 	$utilisateur['prenom'] = "Thierry";
 	$utilisateur['entreprise'] = "Moulin SA";
 	//!!!!!Changer manuellement le type de l'utilisateur (client ou manager) pour simuler les interfaces!!!!
-	$utilisateur['type'] = "client"; //"manager" ou "client"
+	$utilisateur['type'] = "manager"; //"manager" ou "client"
 
 	$db = db_connect();
 
@@ -92,17 +90,20 @@ if(validation_utilisateur())
 						<input type="submit" />
 					</p>
 				</form>
-				<?php
 
+			<?php
 			}
-			// Affichage contenu de la table produits disponibles
-			echo '<p><strong>Lise des produits à disposition:</strong ></p>';
-			echo '<table border=1>';
-			echo '<tr><th bgcolor = \"#CCCCFF\">nom du produit</td>
-			<th bgcolor = \"#CCCCFF\">prix unitaire</td>
-			<th bgcolor = \"#CCCCFF\">nombre à disposition</td>
-			<th bgcolor = \"#CCCCFF\">action</td>
-			<tr>';
+			?>
+			<!-- Affichage contenu de la table produits disponibles -->
+			<p><strong>Lise des produits à disposition:</strong ></p>
+			<table border=1>
+			<tr><th bgcolor = "#CCCCFF">nom du produit</td>
+			<th bgcolor = "#CCCCFF">prix unitaire</td>
+			<th bgcolor = "#CCCCFF">nombre à disposition</td>
+			<th bgcolor = "#CCCCFF">action</td>
+			<tr>
+			<?php
+
 			while ( $produit = $result->fetch(PDO::FETCH_ASSOC))
 			{
 				echo '<tr><td>' . htmlentities($produit['nom']) .
@@ -118,32 +119,15 @@ if(validation_utilisateur())
 			if (check_time() && ($utilisateur['type'] = "client"))
 			{
 				// Affichage contenu de la commande en cours
-				if(isset($produits_commande))
-				{
-					echo '<p><strong>Commande en cours:</strong ></p>';
-					echo '<table border=1>';
-					echo '<tr><th bgcolor = \"#CCCCFF\">nom du produit</td>
-					<th bgcolor = \"#CCCCFF\">nombre</td>
-					<th bgcolor = \"#CCCCFF\">Prix</td>
-					<tr>';
-					foreach ($produits_commande as $produitC)
-					{
-						echo '<tr><td>' . htmlentities($produitC['nom']) .
-						'</td><td>' . htmlentities($produitC['quantite']) .
-						'</td><td>' . htmlentities($produitC['prix']) .
-						'</td></tr>';
-					}
-					echo '</table>';
-				}
 				$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
 				while($row = $result->fetch(PDO::FETCH_ASSOC))
 				{
 					$clé = $row['nom'];
 					$valeur = $row['quantite'];
 					//prix : $valeur = $row['quantite'];
-					$produitChoisi[$clé] = $valeur;
+					$produitPossible[$clé] = $valeur;
 				}
-				print_r ($produitChoisi);
+				print_r ($produitPossible);
 
 				// Suppression de la ligne sélectionnée de l'array des commandes en cours
 				// if (isset($_GET['supprimer']) && is_scalar($_GET['supprimer']))
@@ -161,14 +145,14 @@ if(validation_utilisateur())
 						<legend>Sélectionnez un produit</legend>
 						<?php
 						echo '<select name="' . urlencode('nomform') . '" onchange="document.forms[\'commande\'].submit();">';
-						echo '<option value="-1">- - - Choisissez une produit - - -</option>';
-						foreach($produitChoisi as $key => $value)
+						echo '<option value="-1">- - - Choisissez un produit - - -</option>';
+						foreach($produitPossible as $key => $value)
 						{
 							echo '<option value="' . htmlentities($key) . '" ' . ((isset($prodcommande) && $prodcommande == $key)?" selected=\"selected\"":null) . '>' . htmlentities($key) . '</option>';
 						}
 						echo '</select>';
 						echo '<select name="quantiteform">';
-						for ($i=1; $i < $produitChoisi[$prodcommande]+1; $i++) {
+						for ($i=1; $i < $produitPossible[$prodcommande]+1; $i++) {
 							echo '<option value="' .htmlentities($i). '" ' . '>' . htmlentities($i) . '</option>';
 						}
 						echo '</select>';
@@ -192,19 +176,21 @@ if(validation_utilisateur())
 
 				if(isset($_POST['ok']) && isset($_POST['nomform']) && isset($_POST['quantiteform']))
 				{
-					$currentTime = (int) date('Gis');
+					$currentTime = date('Y-m-d H:i:s');
 					$commandes[$currentTime] = array("produit" => $_POST["nomform"],
 																					 "quantite" => $_POST["quantiteform"]);
 					// sauvegarde dans la Session et affichage sous forme de tableau
 					$_SESSION['commandes'] = $commandes;
 				} // mis fin du if ici
 //Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?
-					echo "<table border=1\"px\">";
-					echo '<tr><th bgcolor = \"#CCCCFF\">TimeStamp</td>
-					<th bgcolor = \"#CCCCFF\">Nom du produit</td>
-					<th bgcolor = \"#CCCCFF\">Quantité</td>
-					<th bgcolor = \"#CCCCFF\">action</td>
-					<tr>';
+					?>
+					<table border=1"px">
+					<tr><th bgcolor = "#CCCCFF">TimeStamp</td>
+					<th bgcolor = "#CCCCFF">Nom du produit</td>
+					<th bgcolor = "#CCCCFF">Quantité</td>
+					<th bgcolor = "#CCCCFF">action</td>
+					<tr>
+					<?php
 					foreach ($commandes as $TimeStamp => $commande) {
 						echo "<tr><td>" . htmlentities($TimeStamp) . "</td>";
 						foreach ($commande as $key => $value) {

@@ -19,6 +19,7 @@
 			// connection à base de donnée PDO
 			// les infos de connexion ci-dessous dans un fichier séparé DB_conf.php
 			$db = new PDO ("mysql:host = $host; dbname = $dbname", $user, $pw, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			return $db;
 		}
 		catch (PDOException $e)
