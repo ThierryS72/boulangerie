@@ -21,7 +21,7 @@ if(validation_utilisateur())
 	$utilisateur['prenom'] = "Thierry";
 	$utilisateur['entreprise'] = "Moulin SA";
 	//!!!!!Changer manuellement le type de l'utilisateur (client ou manager) pour simuler les interfaces!!!!
-	$utilisateur['type'] = "manager"; //"manager" ou "client"
+	$utilisateur['type'] = "client"; //"manager" ou "client"
 
 	$db = db_connect();
 
