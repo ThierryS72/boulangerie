@@ -47,6 +47,25 @@ if(validation_utilisateur())
 		{
 			// Récupère contenu de la table produits dont la quantité est supérieure à 0
 			$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
+			// validation de la commande effectuée
+			if(isset($_POST['passercommande']))
+			{
+				$commandes = $_SESSION['commandes'];
+				foreach ($commandes as $TimeStamp => $commande) {
+					$sql_query = "INSERT INTO boulangerie.commandes( nom, prenom, entreprise,produit, quantite, prix_total, time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?)";
+				try {
+					$id = $db->LastInsertId();
+					$st = $db->prepare($sql_query);
+					// $p = array( 'Semon', 'Thierry', 'Moulin SA', 'ballon', '1', '10', '2017-03-07 09:38:21');
+					$p = array($utilisateur['nom'], $utilisateur['prenom'], $utilisateur['entreprise'], $commande['produit'], $commande['quantite'], '', $TimeStamp);
+					$st->execute($p);
+				}
+				catch (PDOException $e) {
+					echo "insert error: " . htmlentities($e->getMessage()) . "<br/><br/>";
+				}
+
+				};
+			}
 		}
 		else
 		{
@@ -128,7 +147,7 @@ if(validation_utilisateur())
 					//prix : $valeur = $row['quantite'];
 					$produitPossible[$clé] = $valeur;
 				}
-				print_r ($produitPossible);
+				// print_r ($produitPossible);
 
 				// Suppression de la ligne sélectionnée de l'array des commandes en cours
 				// if (isset($_GET['supprimer']) && is_scalar($_GET['supprimer']))
@@ -139,7 +158,7 @@ if(validation_utilisateur())
 				/* On récupère si il existe le nom du produit commandé par le formulaire */
 				$prodcommande = isset($_POST['produitform'])?$_POST['produitform']:null;
 				$quantitecommande = isset($_POST['quantiteform'])?$_POST['quantiteform']:null;
-				echo "<p> Produit commandé: " . $prodcommande . " , nbre de pièces: " . $quantitecommande . "</p>";
+				// echo "<p> Produit commandé: " . $prodcommande . " , nbre de pièces: " . $quantitecommande . "</p>";
 				?>
 				<form action="<?php echo $url_page ?>" method="post" id="commande">
 					<fieldset style="border: 3px double #333399">
@@ -202,11 +221,22 @@ if(validation_utilisateur())
 						echo "</tr>";
 					}
 					echo "</table>";
+					if(count($commandes)!= 0)
+					{
+						?>
+						<form action="<?php echo $url_page ?>" method="post" id="passercommande">
+						<br /><input type="submit" name="passercommande" id="passercommande" value="Passer commande" />
+					</form>
+					<?php
+
+					} else {
+						echo "<br/>Vous devez choisir un article au minimum pour pouvoir passer commande";
+					}
 
 
 					echo "<p>Vous avez commandé " . $quantitecommande . " " . $prodcommande ."</p>";
 
-					print_r ($commandes);
+					// print_r ($commandes);
 
 
 
