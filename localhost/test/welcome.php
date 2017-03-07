@@ -47,7 +47,7 @@ if(validation_utilisateur())
 		{
 			// Récupère contenu de la table produits dont la quantité est supérieure à 0
 			$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
-			// validation de la commande effectuée
+// Ecriture de la commande effectuée dans la table commandes
 			if(isset($_POST['passercommande']))
 			{
 				$commandes = $_SESSION['commandes'];
@@ -59,13 +59,35 @@ if(validation_utilisateur())
 					// $p = array( 'Semon', 'Thierry', 'Moulin SA', 'ballon', '1', '10', '2017-03-07 09:38:21');
 					$p = array($utilisateur['nom'], $utilisateur['prenom'], $utilisateur['entreprise'], $commande['produit'], $commande['quantite'], '', $TimeStamp);
 					$st->execute($p);
+
 				}
 				catch (PDOException $e) {
 					echo "insert error: " . htmlentities($e->getMessage()) . "<br/><br/>";
 				}
 
 				};
+				echo "Commande effectuée avec succès<br/>";
+				?>
+				<p><strong>Lise des produits commandés:</strong ></p>
+				<table border=1>
+				<tr><th bgcolor = "#CCCCFF">quantité commandée</td>
+				<th bgcolor = "#CCCCFF">nom du produit</td>
+				<th bgcolor = "#CCCCFF">prix unitaire</td>
+				<tr>
+				<?php
+				$result = $db->query("SELECT * FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "'");
+				// $result = $db->query("SELECT * FROM boulangerie.commandes WHERE (nom = utilisateur['nom']) ");
+				while ( $produitscommandes = $result->fetch(PDO::FETCH_ASSOC))
+				{
+					echo '<tr><td>' . htmlentities($produitscommandes['quantite']) .
+					'</td><td>' . htmlentities($produitscommandes['produit']) .
+					'</td><td>' . htmlentities($produitscommandes['prix']) .
+					'</td></tr>';
+				}
+				echo '</table>';
+				exit;
 			}
+// Fin de l'écriture de la commande effectuée dans la table commandes
 		}
 		else
 		{
@@ -148,6 +170,18 @@ if(validation_utilisateur())
 					$produitPossible[$clé] = $valeur;
 				}
 				// print_r ($produitPossible);
+
+				//Récupération du nom, prix et quantité de chaque produit
+				$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
+				while($row = $result->fetch(PDO::FETCH_ASSOC))
+				{
+					$produitnom = $row['nom'];
+					$produitquantite = $row['quantite'];
+					$produitprix = $row['prix'];
+					$produitdefinition[$produitnom] = array('quantite' => $produitquantite,
+																				 					'prix' => $produitprix);
+				}
+				print_r ($produitdefinition);
 
 				// Suppression de la ligne sélectionnée de l'array des commandes en cours
 				// if (isset($_GET['supprimer']) && is_scalar($_GET['supprimer']))
