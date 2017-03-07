@@ -52,7 +52,8 @@ if(validation_utilisateur())
 		{
 			echo "Désolé les commandes ne sont possibles qu'entre 6 heures et 8 heures du matin!";
 		}
-	} }
+	}
+}
 	else
 	{
 		echo 'Utilisateur non-valide!';
@@ -136,7 +137,7 @@ if(validation_utilisateur())
 				// }
 
 				/* On récupère si il existe le nom du produit commandé par le formulaire */
-				$prodcommande = isset($_POST['nomform'])?$_POST['nomform']:null;
+				$prodcommande = isset($_POST['produitform'])?$_POST['produitform']:null;
 				$quantitecommande = isset($_POST['quantiteform'])?$_POST['quantiteform']:null;
 				echo "<p> Produit commandé: " . $prodcommande . " , nbre de pièces: " . $quantitecommande . "</p>";
 				?>
@@ -144,7 +145,7 @@ if(validation_utilisateur())
 					<fieldset style="border: 3px double #333399">
 						<legend>Sélectionnez un produit</legend>
 						<?php
-						echo '<select name="' . urlencode('nomform') . '" onchange="document.forms[\'commande\'].submit();">';
+						echo '<select name="' . urlencode('produitform') . '" onchange="document.forms[\'commande\'].submit();">';
 						echo '<option value="-1">- - - Choisissez un produit - - -</option>';
 						foreach($produitPossible as $key => $value)
 						{
@@ -174,10 +175,10 @@ if(validation_utilisateur())
 					$_SESSION['commandes'] = $commandes;
 				}
 
-				if(isset($_POST['ok']) && isset($_POST['nomform']) && isset($_POST['quantiteform']))
+				if(isset($_POST['ok']) && isset($_POST['produitform']) && isset($_POST['quantiteform']))
 				{
 					$currentTime = date('Y-m-d H:i:s');
-					$commandes[$currentTime] = array("produit" => $_POST["nomform"],
+					$commandes[$currentTime] = array("produit" => $_POST["produitform"],
 																					 "quantite" => $_POST["quantiteform"]);
 					// sauvegarde dans la Session et affichage sous forme de tableau
 					$_SESSION['commandes'] = $commandes;
