@@ -57,7 +57,7 @@ if(validation_utilisateur())
 					$id = $db->LastInsertId();
 					$st = $db->prepare($sql_query);
 					// $p = array( 'Semon', 'Thierry', 'Moulin SA', 'ballon', '1', '10', '2017-03-07 09:38:21');
-					$p = array($utilisateur['nom'], $utilisateur['prenom'], $utilisateur['entreprise'], $commande['produit'], $commande['quantite'], '', $TimeStamp);
+					$p = array($utilisateur['nom'], $utilisateur['prenom'], $utilisateur['entreprise'], $commande['produit'], $commande['quantite'], $commande['prix-total'], $TimeStamp);
 					$st->execute($p);
 
 				}
@@ -72,19 +72,22 @@ if(validation_utilisateur())
 				<table border=1>
 				<tr><th bgcolor = "#CCCCFF">quantité commandée</td>
 				<th bgcolor = "#CCCCFF">nom du produit</td>
-				<th bgcolor = "#CCCCFF">prix unitaire</td>
+				<th bgcolor = "#CCCCFF">prix total</td>
 				<tr>
 				<?php
 				$result = $db->query("SELECT * FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "'");
 				// $result = $db->query("SELECT * FROM boulangerie.commandes WHERE (nom = utilisateur['nom']) ");
+				$prixtotalcommande = 0;
 				while ( $produitscommandes = $result->fetch(PDO::FETCH_ASSOC))
 				{
 					echo '<tr><td>' . htmlentities($produitscommandes['quantite']) .
 					'</td><td>' . htmlentities($produitscommandes['produit']) .
-					'</td><td>' . htmlentities($produitscommandes['prix']) .
+					'</td><td>' . htmlentities($produitscommandes['prix_total']) .
 					'</td></tr>';
+					$prixtotalcommande = $prixtotalcommande + $produitscommandes['prix_total'];
 				}
 				echo '</table>';
+				echo "<h2>Montant de la commande: " . htmlentities($prixtotalcommande) . "</h2>";
 				exit;
 			}
 // Fin de l'écriture de la commande effectuée dans la table commandes
@@ -167,7 +170,7 @@ if(validation_utilisateur())
 					$clé = $row['nom'];
 					$valeur = $row['quantite'];
 					//prix : $valeur = $row['quantite'];
-					$produitPossible[$clé] = $valeur;
+// $produitPossible[$clé] = $valeur;
 				}
 				// print_r ($produitPossible);
 
@@ -181,7 +184,8 @@ if(validation_utilisateur())
 					$produitdefinition[$produitnom] = array('quantite' => $produitquantite,
 																				 					'prix' => $produitprix);
 				}
-				print_r ($produitdefinition);
+				$produitPossible = $produitdefinition;
+				// print_r ($produitPossible);
 
 				// Suppression de la ligne sélectionnée de l'array des commandes en cours
 				// if (isset($_GET['supprimer']) && is_scalar($_GET['supprimer']))
@@ -206,7 +210,8 @@ if(validation_utilisateur())
 						}
 						echo '</select>';
 						echo '<select name="quantiteform">';
-						for ($i=1; $i < $produitPossible[$prodcommande]+1; $i++) {
+						for ($i=1; $i < $produitPossible[$prodcommande]['quantite']+1; $i++) {
+						// for ($i=1; $i < $produitPossible[$prodcommande]+1; $i++) {
 							echo '<option value="' .htmlentities($i). '" ' . '>' . htmlentities($i) . '</option>';
 						}
 						echo '</select>';
@@ -232,7 +237,9 @@ if(validation_utilisateur())
 				{
 					$currentTime = date('Y-m-d H:i:s');
 					$commandes[$currentTime] = array("produit" => $_POST["produitform"],
-																					 "quantite" => $_POST["quantiteform"]);
+																					 "quantite" => $_POST["quantiteform"],
+																				 	 "prix" => $produitPossible[$prodcommande]['prix'],
+																				 	 "prix-total" => $_POST["quantiteform"] * $produitPossible[$prodcommande]['prix']);
 					// sauvegarde dans la Session et affichage sous forme de tableau
 					$_SESSION['commandes'] = $commandes;
 				} // mis fin du if ici
@@ -242,6 +249,8 @@ if(validation_utilisateur())
 					<tr><th bgcolor = "#CCCCFF">TimeStamp</td>
 					<th bgcolor = "#CCCCFF">Nom du produit</td>
 					<th bgcolor = "#CCCCFF">Quantité</td>
+					<th bgcolor = "#CCCCFF">Prix unitaire</td>
+					<th bgcolor = "#CCCCFF">Prix total</td>
 					<th bgcolor = "#CCCCFF">action</td>
 					<tr>
 					<?php
@@ -250,6 +259,7 @@ if(validation_utilisateur())
 						foreach ($commande as $key => $value) {
 							echo "<td>" . htmlentities($value) . "</td>";
 						}
+						// echo "<td>" . $commande['quantite'] * $commande['prix'] . "</td>";
 						echo "<td>" . a($url_page, "supprimer", array("supprimer" => $TimeStamp)) .
 						'</td>';
 						echo "</tr>";
