@@ -6,9 +6,6 @@ require "DB_conf.php";
 
 $url_page = $_SERVER['PHP_SELF'];
 
-echo"ceci est le compteur de session:" ;
-print_r($_SESSION['compteur']);
-$_SESSION['compteur'] = $_SESSION['compteur'] + 1;
 /*
 - Faire authentification avant d'avoir accès aux données (tables)
 - options d'affichage en fonction du type d'utilisateur et du moment où il se connecte à la base:
@@ -92,6 +89,7 @@ if(validation_utilisateur())
 				echo '</table>';
 				echo "<h2>Montant de la commande: " . htmlentities($prixtotalcommande) . "</h2>";
 				unset($_SESSION['commandes']); // Suppression de la variable de session pour recommencer avec une commande neutre
+				unset($_SESSION['asoustraire']);
 				exit;
 			}
 // Fin de l'écriture de la commande effectuée dans la table commandes
@@ -180,7 +178,13 @@ if(validation_utilisateur())
 
 				//Récupération du nom, prix et quantité de chaque produit
 				$produitPossible = recuperationproduits($db);
-				$produitPossible = soustraireproduit($db, $produitPossible);
+				// $produitPossible = soustraireproduit($db, $produitPossible);
+				soustraireproduit($db, $produitPossible);
+
+				echo"ceci est le compteur de session:" ;
+				print_r($_SESSION['compteur']);
+				$_SESSION['compteur'] = $_SESSION['compteur'] + 1;
+
 				// print_r($produitPossible1);
 				// print_r ($produitPossible);
 				// echo"session a soustraire: ";
@@ -272,7 +276,7 @@ if(validation_utilisateur())
 					// sauvegarde dans la Session et affichage sous forme de tableau
 					$_SESSION['commandes'] = $commandes;
 					$_SESSION['asoustraire'] = $produitasoustraire;
-					$produitPossible = soustraireproduit($db, $produitPossible);
+					// soustraireproduit($db, $produitPossible);
 					// $produitPossible = soustraireproduit($db, $produitPossible);
 				} // mis fin du if ici
 //Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?
@@ -311,8 +315,8 @@ if(validation_utilisateur())
 
 
 					echo "<p>Vous avez commandé " . $quantitecommande . " " . $prodcommande ."</p>";
-					echo"session a soustraire mis à la fin: ";
-					print_r ($_SESSION['asoustraire']);
+					// echo"session a soustraire mis à la fin: ";
+					// print_r ($_SESSION['asoustraire']);
 
 					// print_r ($commandes);
 

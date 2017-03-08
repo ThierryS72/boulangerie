@@ -66,30 +66,16 @@ function recuperationproduits($db)
 	return $produitdefinition;
 }
 
-function soustraireproduit($db, $produitPossible)
+function soustraireproduit($db, &$produitPossible)
 {
 	foreach ($produitPossible as $key => $value) {
 		$result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "'");
 		while($row = $result->fetch(PDO::FETCH_ASSOC))
 		{
 			$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $row['quantite'];
-
-			if (isset($_SESSION['asoustraire'])) {
-			// echo"<P>CECI EST LA SESSION ASOUSTRAIRE</P>";
-										$produitasoustraire = $_SESSION['asoustraire'];
-										print_r($_SESSION['asoustraire']);
-										if ($produitPossible[$key] == $produitasoustraire['produit'])
-										{
-											$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $produitasoustraire['quantite'];
-											unset($produitasoustraire);
-											$_SESSION['asoustraire'] = $produitasoustraire;
-											unset($_SESSION['asoustraire']);
-										}
-									}
-
 		}
 	}
-	return $produitPossible;
+	// return $produitPossible;
 }
 
 function a($u, $t, $a) {
