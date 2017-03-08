@@ -9,7 +9,7 @@ function db_connect()
 	$host = "localhost";
 	$dbname = "boulangerie";
 	$user = "root";
-	$pw = "root";
+	$pw = "";
 
 	/*
 	*Problème avec $host et$dbname: je peux mettre n'importe quoi dans ces 2 variables et la connexion se fait quand même ???
@@ -98,4 +98,45 @@ function a($u, $t, $a) {
 	. '">'
 	. $t
 	. '</a>';
+}
+
+function makeTable($col_nom, $col_element, $db_action) {
+	$string = "<table border=1>"
+	         . "<tr>";
+	foreach ($col_nom as $c) {
+		
+						$string = $string . elt2($c, "th");
+	}
+	$string =  $string . "</tr>";
+				
+	foreach (($db_action) as $row) {
+     $string =  $string . "<tr>";
+     $string =  $string . elt(array_map("htmlentities", getcol($row, $col_element)));
+	   $string =  $string .  "</tr>";
+		 //$string =  $string . $expression;
+	}
+	$string =  $string . "</table>";
+	return $string;
+}
+
+function elt($a, $t = "td") {
+   // use: accès aux variables de la fonction englobante, dès PHP 5.3
+   $callback = function($s) use ($t) {
+      return "<" . $t . ">" . $s . "</" . $t . ">";
+   };
+
+   return join("", array_map($callback, $a));
+}
+
+function elt2($a, $t = "td") {
+      return "<" . $t . ">" . $a . "</" . $t . ">";
+}
+
+function getcol($a, $c) {
+   $x = array();
+
+   foreach ($c as $y) {
+      $x[] = $a[$y];
+   }
+   return $x;
 }
