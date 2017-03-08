@@ -88,6 +88,7 @@ if(validation_utilisateur())
 				}
 				echo '</table>';
 				echo "<h2>Montant de la commande: " . htmlentities($prixtotalcommande) . "</h2>";
+				unset($_SESSION['commandes']); // Suppression de la variable de session pour recommencer avec une commande neutre
 				exit;
 			}
 // Fin de l'écriture de la commande effectuée dans la table commandes
@@ -175,16 +176,37 @@ if(validation_utilisateur())
 				// print_r ($produitPossible);
 
 				//Récupération du nom, prix et quantité de chaque produit
-				$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
-				while($row = $result->fetch(PDO::FETCH_ASSOC))
-				{
-					$produitnom = $row['nom'];
-					$produitquantite = $row['quantite'];
-					$produitprix = $row['prix'];
-					$produitdefinition[$produitnom] = array('quantite' => $produitquantite,
-																				 					'prix' => $produitprix);
-				}
-				$produitPossible = $produitdefinition;
+				$produitPossible = recuperationproduits($db);
+				$produitPossible = soustraireproduit($db, $produitPossible);
+				// print_r($produitPossible1);
+				// print_r ($produitPossible);
+				// echo"session a soustraire: ";
+				// print_r ($_SESSION['asoustraire']);
+
+				// foreach ($produitPossible as $key => $value) {
+				// 	$result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "'");
+				// 	while($row = $result->fetch(PDO::FETCH_ASSOC))
+				// 	{
+				// 		$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $row['quantite'];
+
+// 						// if (isset($_SESSION['asoustraire'])) {
+// echo"<P>CECI EST LA SESSION ASOUSTRAIRE</P>";
+				// 			$produitasoustraire = $_SESSION['asoustraire'];
+				// 			if ($produitPossible[$key] == $produitasoustraire['produit'])
+				// 			{
+				// 				$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $produitasoustraire['quantite'];
+				// 				unset($produitasoustraire);
+				// 				$_SESSION['asoustraire'] = $produitasoustraire;
+				// 			}
+				// 		// }
+				//
+
+				// 	}
+				// }print_r($produitPossible);
+
+				// echo"session a soustraire: ";
+				// print_r ($_SESSION['asoustraire']);
+
 				// print_r ($produitPossible);
 
 				// Suppression de la ligne sélectionnée de l'array des commandes en cours
@@ -202,6 +224,7 @@ if(validation_utilisateur())
 					<fieldset style="border: 3px double #333399">
 						<legend>Sélectionnez un produit</legend>
 						<?php
+						// $produitPossible = recuperationproduits($db);
 						echo '<select name="' . urlencode('produitform') . '" onchange="document.forms[\'commande\'].submit();">';
 						echo '<option value="-1">- - - Choisissez un produit - - -</option>';
 						foreach($produitPossible as $key => $value)
@@ -240,8 +263,12 @@ if(validation_utilisateur())
 																					 "quantite" => $_POST["quantiteform"],
 																				 	 "prix" => $produitPossible[$prodcommande]['prix'],
 																				 	 "prix-total" => $_POST["quantiteform"] * $produitPossible[$prodcommande]['prix']);
+					$produitasoustraire = array("produit" => $_POST["produitform"], "quantite" => $_POST["quantiteform"]);
+					print_r($produitasoustraire);
 					// sauvegarde dans la Session et affichage sous forme de tableau
 					$_SESSION['commandes'] = $commandes;
+					$_SESSION['asoustraire'] = $produitasoustraire;
+					// $produitPossible = soustraireproduit($db, $produitPossible);
 				} // mis fin du if ici
 //Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?
 					?>
@@ -279,6 +306,8 @@ if(validation_utilisateur())
 
 
 					echo "<p>Vous avez commandé " . $quantitecommande . " " . $prodcommande ."</p>";
+					echo"session a soustraire mis à la fin: ";
+					print_r ($_SESSION['asoustraire']);
 
 					// print_r ($commandes);
 
