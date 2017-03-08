@@ -6,6 +6,9 @@ require "DB_conf.php";
 
 $url_page = $_SERVER['PHP_SELF'];
 
+echo"ceci est le compteur de session:" ;
+print_r($_SESSION['compteur']);
+$_SESSION['compteur'] = $_SESSION['compteur'] + 1;
 /*
 - Faire authentification avant d'avoir accès aux données (tables)
 - options d'affichage en fonction du type d'utilisateur et du moment où il se connecte à la base:
@@ -264,10 +267,12 @@ if(validation_utilisateur())
 																				 	 "prix" => $produitPossible[$prodcommande]['prix'],
 																				 	 "prix-total" => $_POST["quantiteform"] * $produitPossible[$prodcommande]['prix']);
 					$produitasoustraire = array("produit" => $_POST["produitform"], "quantite" => $_POST["quantiteform"]);
-					print_r($produitasoustraire);
+					// echo "produit à soustraire si post = ok: ";
+					// print_r($produitasoustraire);
 					// sauvegarde dans la Session et affichage sous forme de tableau
 					$_SESSION['commandes'] = $commandes;
 					$_SESSION['asoustraire'] = $produitasoustraire;
+					$produitPossible = soustraireproduit($db, $produitPossible);
 					// $produitPossible = soustraireproduit($db, $produitPossible);
 				} // mis fin du if ici
 //Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?

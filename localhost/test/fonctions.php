@@ -74,17 +74,18 @@ function soustraireproduit($db, $produitPossible)
 		{
 			$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $row['quantite'];
 
-			// if (isset($_SESSION['asoustraire'])) {
-			// // echo"<P>CECI EST LA SESSION ASOUSTRAIRE</P>";
-			// 							$produitasoustraire = $_SESSION['asoustraire'];
-			// 							echo $produitasoustraire;
-			// 							if ($produitPossible[$key] == $produitasoustraire['produit'])
-			// 							{
-			// 								$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $produitasoustraire['quantite'];
-			// 								unset($produitasoustraire);
-			// 								$_SESSION['asoustraire'] = $produitasoustraire;
-			// 							}
-			// 						}
+			if (isset($_SESSION['asoustraire'])) {
+			// echo"<P>CECI EST LA SESSION ASOUSTRAIRE</P>";
+										$produitasoustraire = $_SESSION['asoustraire'];
+										print_r($_SESSION['asoustraire']);
+										if ($produitPossible[$key] == $produitasoustraire['produit'])
+										{
+											$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $produitasoustraire['quantite'];
+											unset($produitasoustraire);
+											$_SESSION['asoustraire'] = $produitasoustraire;
+											unset($_SESSION['asoustraire']);
+										}
+									}
 
 		}
 	}
