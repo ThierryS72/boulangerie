@@ -6,6 +6,11 @@ require "DB_conf.php";
 
 $url_page = $_SERVER['PHP_SELF'];
 
+if (isset($_SESSION['commandes'])) {
+	$commandes = $_SESSION['commandes'];
+}
+// echo"<br/>Etat de la commande: " . count($commandes) . "<br/>";
+
 /*
 - Faire authentification avant d'avoir accès aux données (tables)
 - options d'affichage en fonction du type d'utilisateur et du moment où il se connecte à la base:
@@ -47,52 +52,7 @@ if(validation_utilisateur())
 		{
 			// Récupère contenu de la table produits dont la quantité est supérieure à 0
 			$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
-// Ecriture de la commande effectuée dans la table commandes
-			if(isset($_POST['passercommande']))
-			{
-				$commandes = $_SESSION['commandes'];
-				foreach ($commandes as $TimeStamp => $commande) {
-					$sql_query = "INSERT INTO boulangerie.commandes( nom, prenom, entreprise,produit, quantite, prix_total, time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?)";
-				try {
-					$id = $db->LastInsertId();
-					$st = $db->prepare($sql_query);
-					// $p = array( 'Semon', 'Thierry', 'Moulin SA', 'ballon', '1', '10', '2017-03-07 09:38:21');
-					$p = array($utilisateur['nom'], $utilisateur['prenom'], $utilisateur['entreprise'], $commande['produit'], $commande['quantite'], $commande['prix-total'], $TimeStamp);
-					$st->execute($p);
 
-				}
-				catch (PDOException $e) {
-					echo "insert error: " . htmlentities($e->getMessage()) . "<br/><br/>";
-				}
-
-				};
-				echo "Commande effectuée avec succès<br/>";
-				?>
-				<p><strong>Lise des produits commandés:</strong ></p>
-				<table border=1>
-				<tr><th bgcolor = "#CCCCFF">quantité commandée</td>
-				<th bgcolor = "#CCCCFF">nom du produit</td>
-				<th bgcolor = "#CCCCFF">prix total</td>
-				<tr>
-				<?php
-				$result = $db->query("SELECT * FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "'");
-				// $result = $db->query("SELECT * FROM boulangerie.commandes WHERE (nom = utilisateur['nom']) ");
-				$prixtotalcommande = 0;
-				while ( $produitscommandes = $result->fetch(PDO::FETCH_ASSOC))
-				{
-					echo '<tr><td>' . htmlentities($produitscommandes['quantite']) .
-					'</td><td>' . htmlentities($produitscommandes['produit']) .
-					'</td><td>' . htmlentities($produitscommandes['prix_total']) .
-					'</td></tr>';
-					$prixtotalcommande = $prixtotalcommande + $produitscommandes['prix_total'];
-				}
-				echo '</table>';
-				echo "<h2>Montant de la commande: " . htmlentities($prixtotalcommande) . "</h2>";
-				unset($_SESSION['commandes']); // Suppression de la variable de session pour recommencer avec une commande neutre
-				unset($_SESSION['asoustraire']);
-				exit;
-			}
-// Fin de l'écriture de la commande effectuée dans la table commandes
 		}
 		else
 		{
@@ -142,7 +102,7 @@ if(validation_utilisateur())
 			}
 			?>
 			<!-- Affichage contenu de la table produits disponibles -->
-			<p><strong>Lise des produits à disposition:</strong ></p>
+			<p><strong>Liste des produits à disposition:</strong ></p>
 			<table border=1>
 			<tr><th bgcolor = "#CCCCFF">nom du produit</td>
 			<th bgcolor = "#CCCCFF">prix unitaire</td>
@@ -165,6 +125,55 @@ if(validation_utilisateur())
 		{
 			if (check_time() && ($utilisateur['type'] = "client"))
 			{
+				// Ecriture de la commande effectuée dans la table commandes
+							if(isset($_POST['passercommande']))
+							{
+								$commandes = $_SESSION['commandes'];
+								foreach ($commandes as $TimeStamp => $commande) {
+									$sql_query = "INSERT INTO boulangerie.commandes( nom, prenom, entreprise,produit, quantite, prix_total, time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?)";
+								try {
+									$id = $db->LastInsertId();
+									$st = $db->prepare($sql_query);
+									// $p = array( 'Semon', 'Thierry', 'Moulin SA', 'ballon', '1', '10', '2017-03-07 09:38:21');
+									$p = array($utilisateur['nom'], $utilisateur['prenom'], $utilisateur['entreprise'], $commande['produit'], $commande['quantite'], $commande['prix-total'], $TimeStamp);
+									$st->execute($p);
+
+								}
+								catch (PDOException $e) {
+									echo "insert error: " . htmlentities($e->getMessage()) . "<br/><br/>";
+								}
+
+								};
+								echo "Commande effectuée avec succès<br/>";
+								?>
+								<p><strong>Liste des produits commandés:</strong ></p>
+								<table border=1>
+								<tr><th bgcolor = "#CCCCFF">quantité commandée</td>
+								<th bgcolor = "#CCCCFF">nom du produit</td>
+								<th bgcolor = "#CCCCFF">prix total</td>
+								<tr>
+								<?php
+								$result = $db->query("SELECT * FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "'");
+								// $result = $db->query("SELECT * FROM boulangerie.commandes WHERE (nom = utilisateur['nom']) ");
+								$prixtotalcommande = 0;
+								while ( $produitscommandes = $result->fetch(PDO::FETCH_ASSOC))
+								{
+									echo '<tr><td>' . htmlentities($produitscommandes['quantite']) .
+									'</td><td>' . htmlentities($produitscommandes['produit']) .
+									'</td><td>' . htmlentities($produitscommandes['prix_total']) .
+									'</td></tr>';
+									$prixtotalcommande = $prixtotalcommande + $produitscommandes['prix_total'];
+								}
+								echo '</table>';
+								echo "<h2>Montant de la commande: " . htmlentities($prixtotalcommande) . "</h2>";
+								unset($_SESSION['commandes']); // Suppression de la variable de session pour recommencer avec une commande neutre
+								unset($_SESSION['asoustraire']);
+								exit;
+							}
+				// Fin de l'écriture de la commande effectuée dans la table commandes
+
+
+
 				// Affichage contenu de la commande en cours
 				$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
 				while($row = $result->fetch(PDO::FETCH_ASSOC))
@@ -176,66 +185,34 @@ if(validation_utilisateur())
 				}
 				// print_r ($produitPossible);
 
-				//Récupération du nom, prix et quantité de chaque produit
-				$produitPossible = recuperationproduits($db);
-				// $produitPossible = soustraireproduit($db, $produitPossible);
-				soustraireproduit($db, $produitPossible);
 
 				echo"ceci est le compteur de session:" ;
 				print_r($_SESSION['compteur']);
 				$_SESSION['compteur'] = $_SESSION['compteur'] + 1;
 
-				// print_r($produitPossible1);
-				// print_r ($produitPossible);
-				// echo"session a soustraire: ";
-				// print_r ($_SESSION['asoustraire']);
 
-				// foreach ($produitPossible as $key => $value) {
-				// 	$result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "'");
-				// 	while($row = $result->fetch(PDO::FETCH_ASSOC))
-				// 	{
-				// 		$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $row['quantite'];
 
-// 						// if (isset($_SESSION['asoustraire'])) {
-// echo"<P>CECI EST LA SESSION ASOUSTRAIRE</P>";
-				// 			$produitasoustraire = $_SESSION['asoustraire'];
-				// 			if ($produitPossible[$key] == $produitasoustraire['produit'])
-				// 			{
-				// 				$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $produitasoustraire['quantite'];
-				// 				unset($produitasoustraire);
-				// 				$_SESSION['asoustraire'] = $produitasoustraire;
-				// 			}
-				// 		// }
-				//
-
-				// 	}
-				// }print_r($produitPossible);
-
-				// echo"session a soustraire: ";
-				// print_r ($_SESSION['asoustraire']);
-
-				// print_r ($produitPossible);
-
-				// Suppression de la ligne sélectionnée de l'array des commandes en cours
-				// if (isset($_GET['supprimer']) && is_scalar($_GET['supprimer']))
-				// {
-				// 	unset($commandes);
-				// }
 
 				/* On récupère si il existe le nom du produit commandé par le formulaire */
 				$prodcommande = isset($_POST['produitform'])?$_POST['produitform']:null;
 				$quantitecommande = isset($_POST['quantiteform'])?$_POST['quantiteform']:null;
-				// echo "<p> Produit commandé: " . $prodcommande . " , nbre de pièces: " . $quantitecommande . "</p>";
+
 				?>
 				<form action="<?php echo $url_page ?>" method="post" id="commande">
 					<fieldset style="border: 3px double #333399">
 						<legend>Sélectionnez un produit</legend>
 						<?php
+
+						$produitPossible = recuperationproduits($db);
+						soustraireproduitscommandes($db, $produitPossible);
+
+soustraireproduitsencours($commandes, $produitPossible);
 						// $produitPossible = recuperationproduits($db);
 						echo '<select name="' . urlencode('produitform') . '" onchange="document.forms[\'commande\'].submit();">';
 						echo '<option value="-1">- - - Choisissez un produit - - -</option>';
 						foreach($produitPossible as $key => $value)
 						{
+							// echo '<option value="' . htmlentities($key) . '" >' . htmlentities($key) . '</option>';
 							echo '<option value="' . htmlentities($key) . '" ' . ((isset($prodcommande) && $prodcommande == $key)?" selected=\"selected\"":null) . '>' . htmlentities($key) . '</option>';
 						}
 						echo '</select>';
@@ -245,6 +222,7 @@ if(validation_utilisateur())
 							echo '<option value="' .htmlentities($i). '" ' . '>' . htmlentities($i) . '</option>';
 						}
 						echo '</select>';
+						// $_POST['produitform']='';
 						?>
 
 						<br /><input type="submit" name="ok" id="ok" value="Sélectionner" />
@@ -252,9 +230,6 @@ if(validation_utilisateur())
 				</form>
 				<?php
 //Début de la partie qui pourrait être placée avant le HTML, dans la partie client?
-				if (isset($_SESSION['commandes'])) {
-					$commandes = $_SESSION['commandes'];
-				}
 
 				// Suppression de la ligne sélectionnée de l'array des commandes en cours
 				if (isset($_GET['supprimer']) && is_scalar($_GET['supprimer']))
@@ -270,15 +245,16 @@ if(validation_utilisateur())
 																					 "quantite" => $_POST["quantiteform"],
 																				 	 "prix" => $produitPossible[$prodcommande]['prix'],
 																				 	 "prix-total" => $_POST["quantiteform"] * $produitPossible[$prodcommande]['prix']);
-					$produitasoustraire = array("produit" => $_POST["produitform"], "quantite" => $_POST["quantiteform"]);
-					// echo "produit à soustraire si post = ok: ";
-					// print_r($produitasoustraire);
+					// $produitasoustraire = array("produit" => $_POST["produitform"], "quantite" => $_POST["quantiteform"]);
+// print_r($commandes);
+// soustraireproduitsencours($commandes, $produitPossible);
 					// sauvegarde dans la Session et affichage sous forme de tableau
+// echo"<br/>Etat de la commande --: " . count($commandes);
 					$_SESSION['commandes'] = $commandes;
-					$_SESSION['asoustraire'] = $produitasoustraire;
-					// soustraireproduit($db, $produitPossible);
-					// $produitPossible = soustraireproduit($db, $produitPossible);
+					// $_SESSION['asoustraire'] = $produitasoustraire;
+
 				} // mis fin du if ici
+
 //Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?
 					?>
 					<table border=1"px">
@@ -314,7 +290,7 @@ if(validation_utilisateur())
 					}
 
 
-					echo "<p>Vous avez commandé " . $quantitecommande . " " . $prodcommande ."</p>";
+					// echo "<p>Vous avez commandé " . $quantitecommande . " " . $prodcommande ."</p>";
 					// echo"session a soustraire mis à la fin: ";
 					// print_r ($_SESSION['asoustraire']);
 

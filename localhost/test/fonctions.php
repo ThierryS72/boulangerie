@@ -66,7 +66,7 @@ function recuperationproduits($db)
 	return $produitdefinition;
 }
 
-function soustraireproduit($db, &$produitPossible)
+function soustraireproduitscommandes($db, &$produitPossible)
 {
 	foreach ($produitPossible as $key => $value) {
 		$result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "'");
@@ -75,7 +75,16 @@ function soustraireproduit($db, &$produitPossible)
 			$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $row['quantite'];
 		}
 	}
-	// return $produitPossible;
+}
+
+function soustraireproduitsencours($commandes, &$produitPossible)
+{
+	foreach ($commandes as $TimeStamp => $commande) {
+		if (array_key_exists($commande['produit'], $produitPossible))
+		{
+			$produitPossible[$commande['produit']]['quantite'] = $produitPossible[$commande['produit']]['quantite'] - $commande['quantite'];
+		}
+	}
 }
 
 function a($u, $t, $a) {
