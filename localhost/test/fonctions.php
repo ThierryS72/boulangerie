@@ -100,20 +100,46 @@ function a($u, $t, $a) {
 	. '</a>';
 }
 
-function makeTable($col_nom, $col_element, $db_action) {
+
+function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_page, &$parametre) {
 	$string = "<table border=1>"
 	         . "<tr>";
 	foreach ($col_nom as $c) {
 		
-						$string = $string . elt2($c, "th");
+						$string = $string . elt2($c, "th", $color);
 	}
 	$string =  $string . "</tr>";
 				
-	foreach (($db_action) as $row) {
-     $string =  $string . "<tr>";
-     $string =  $string . elt(array_map("htmlentities", getcol($row, $col_element)));
-	   $string =  $string .  "</tr>";
-		 //$string =  $string . $expression;
+	if ($type==1)
+	{
+		foreach (($db_request) as $row) {
+			 $string =  $string . "<tr>";
+			 $string =  $string . elt(array_map("htmlentities", getcol($row, $col_element)));
+			 $string =  $string . "<td>" . a($url_page, "modifier", array("modifier" => $row['id'])) . 
+			 "</td>";
+			 $string =  $string .  "</tr>";
+		}
+	}
+	if ($type==2)
+	{
+		foreach (($db_request) as $row) {
+			 $string =  $string . "<tr>";
+			 $string =  $string . elt(array_map("htmlentities", getcol($row, $col_element)));
+			 $string =  $string .  "</tr>";
+			 $parametre =  $parametre + $row["prix_total"]; //retourne prix total;
+		}
+	}
+	if ($type==3)
+	{
+		foreach ($parametre as $TimeStamp => $commande) {
+						$string =  $string . "<tr><td>" . htmlentities($TimeStamp) . "</td>";
+						foreach ($commande as $key => $value) {
+							$string =  $string . "<td>" . htmlentities($value) . "</td>";
+						}
+						$string =  $string . "<td>" . a($url_page, "supprimer", array("supprimer" => $TimeStamp)) .
+						'</td>';
+						$string =  $string . "</tr>";
+					}
 	}
 	$string =  $string . "</table>";
 	return $string;
@@ -128,8 +154,9 @@ function elt($a, $t = "td") {
    return join("", array_map($callback, $a));
 }
 
-function elt2($a, $t = "td") {
-      return "<" . $t . ">" . $a . "</" . $t . ">";
+function elt2($a, $t = "td", $color = '"#CCCCFF"') {
+   // use: accès aux variables de la fonction englobante, dès PHP 5.3
+      return "<" . $t . " bgcolor = " . $color . ">" . $a . "</" . $t . ">";
 }
 
 function getcol($a, $c) {
