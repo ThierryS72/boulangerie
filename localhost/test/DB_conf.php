@@ -3,7 +3,7 @@
 $host = "localhosti";
 $dbname = "boulangeriei";
 $user = "root";
-$pw = "root"; // � changer
+$pw = ""; // � changer
 
 // ne pas fermer le php pour
 // eviter les newlines HTML
