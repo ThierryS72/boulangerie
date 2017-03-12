@@ -18,6 +18,8 @@ if (isset($_SESSION['commandes'])) {
 - Si plus dans les temps, le clients voit sa denière commande et n'a pas l'option de "passer la commande"
 */
 
+
+
 if(validation_utilisateur())
 {
 	// TODO: Extraire les spécifications de utilisateurs de base de donnée utilisateur dans validation_utilisateur()

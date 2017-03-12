@@ -9,7 +9,7 @@ function db_connect()
 	$host = "localhost";
 	$dbname = "boulangerie";
 	$user = "root";
-	$pw = "";
+	$pw = "root";
 
 	/*
 	*Problème avec $host et$dbname: je peux mettre n'importe quoi dans ces 2 variables et la connexion se fait quand même ???
@@ -104,11 +104,11 @@ function makeTable($col_nom, $col_element, $db_action) {
 	$string = "<table border=1>"
 	         . "<tr>";
 	foreach ($col_nom as $c) {
-		
+
 						$string = $string . elt2($c, "th");
 	}
 	$string =  $string . "</tr>";
-				
+
 	foreach (($db_action) as $row) {
      $string =  $string . "<tr>";
      $string =  $string . elt(array_map("htmlentities", getcol($row, $col_element)));
