@@ -20,7 +20,7 @@
 			// Connect to the database and select the user based on their provided email address.
 			// Be sure to retrieve their password and any other information you want to save for the user session.
 $db = db_connect();
-      $result = $db->query("SELECT id, email, password, nom, level FROM boulangerie.utilisateurs WHERE email = '" . $email . "'");
+      $result = $db->query("SELECT id, email, password, nom, prenom, entreprise, level FROM boulangerie.utilisateurs WHERE email = '" . $email . "'");
       $row = $result->fetch(PDO::FETCH_ASSOC);
 			// If the user record was found, compare the password on record to the one provided hashed as necessary.
 			// If successful, now set up session variables for the user and store a flag to say they are authorized.
@@ -35,7 +35,9 @@ $db = db_connect();
 					$_SESSION['is_auth'] = true;
 					$_SESSION['user_level'] = $row['level'];
 					$_SESSION['user_id'] = $row['id'];
-					$_SESSION['nom'] = $row['nom'];
+					$_SESSION['user_nom'] = $row['nom'];
+					$_SESSION['user_prenom'] = $row['prenom'];
+					$_SESSION['user_entreprise'] = $row['entreprise'];
 
 					// Once the sessions variables have been set, redirect them to the landing page / home page.
 					header('location: welcome.php');

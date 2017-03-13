@@ -1,17 +1,36 @@
 <?php
 session_start(); // a placer en tout premier, avant HTML car utilise un cookie
 
+// Test the session to see if is_auth flag was set (meaning they logged in successfully)
+// If test fails, send the user to login.php and prevent rest of page being shown.
+if (!isset($_SESSION["is_auth"])) {
+	header("location: login.php");
+	exit;
+}
+else if (isset($_REQUEST['logout']) && $_REQUEST['logout'] == true) {
+	// At any time we can logout by sending a "logout" value which will unset the "is_auth" flag.
+	// We can also destroy the session if so desired.
+	unset($_SESSION['is_auth']);
+	session_destroy();
+
+	// After logout, send them back to login.php
+	header("location: login.php");
+	exit;
+}
+
+
 require "fonctions.php";
 require "DB_conf.php";
-
 $url_page = $_SERVER['PHP_SELF'];
+
 
 if (isset($_SESSION['commandes'])) {
 	$commandes = $_SESSION['commandes'];
 }
 else
 {
-	$commandes = "";
+	// $commandes = "";
+	unset ($commandes);
 	unset($_SESSION['commandes']);
 }
 // echo"<br/>Etat de la commande: " . count($commandes) . "<br/>";
@@ -27,11 +46,11 @@ if(validation_utilisateur())
 {
 	// TODO: Extraire les spécifications de utilisateurs de base de donnée utilisateur dans validation_utilisateur()
 	// Test: mockup qui contient les spécifications des utilisateurs
-	$utilisateur['nom'] = "Sémon";
-	$utilisateur['prenom'] = "Thierry";
-	$utilisateur['entreprise'] = "Moulin SA";
+	$utilisateur['nom'] = $_SESSION['user_nom']; /*"Sémon";*/
+	$utilisateur['prenom'] = $_SESSION['user_prenom']; /*"Thierry";*/
+	$utilisateur['entreprise'] = $_SESSION['user_entreprise']; /*"Moulin SA";*/
 	//!!!!!Changer manuellement le type de l'utilisateur (client ou manager) pour simuler les interfaces!!!!
-	$utilisateur['type'] = "manager"; //"manager" ou "client"
+	$utilisateur['type'] = $_SESSION['user_level']; /*"client"; //"manager" ou "client" */
 
 	$db = db_connect();
 
@@ -109,7 +128,19 @@ if(validation_utilisateur())
 			$parametre = 0;
 			// Affichage contenu de la table produits disponibles
 			echo '<p><strong>Liste des produits à disposition:</strong ></p>';
+			?>
+
+			<form action="<?php echo $url_page ?>" method="GET" id="logout">
+				<br /><input type="submit" name="logout" id="logout" value="Se déconnecter" />
+			</form> <br/>
+
+		<?php
 			echo makeTable($type, $col_nom, $col_element, $db->query($sql_query), $color, $url_page, $parametre);
+			?>
+			<form action="<?php echo $url_page ?>" method="GET" id="logout">
+				<br /><input type="submit" name="logout" id="logout" value="Se déconnecter" />
+			</form>
+			<?php
 		}
 		else //Les clients
 		{
@@ -140,14 +171,15 @@ if(validation_utilisateur())
 								$col_element = array('quantite', 'produit', 'prix_total');
 								$color = '"#CCCCFF"';
 								$parametre = 0;
-						
+
 								$sql_query = ("SELECT " . join(", ", $col_element) . " FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "'");
-								
+
 								echo '<p><strong>Lise des produits commandés:</strong ></p>';
 								echo makeTable($type, $col_nom, $col_element, $db->query($sql_query), $color, $url_page, $parametre);
 								echo "<h2>Montant de la commande: " . htmlentities($parametre) . "</h2>";
 								unset($_SESSION['commandes']); // Suppression de la variable de session pour recommencer avec une commande neutre
 								unset($_SESSION['asoustraire']);
+								session_destroy();
 								exit;
 							}
 				// Fin de l'écriture de la commande effectuée dans la table commandes
@@ -241,7 +273,7 @@ if(validation_utilisateur())
 					$col_element = array('quantite', 'produit', 'prix_total');
 					$color = '"#CCCCFF"';
 					echo makeTable($type, $col_nom, $col_element, $db, $color, $url_page, $commandes);
-					
+
 					if(count($commandes)!= 0)
 					{
 						?>
