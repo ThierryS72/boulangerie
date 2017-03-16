@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Fonction connexion à la base de données
+ *
+ * Permet de se connecter à la base de donnée boulangerie avec le
+ * nom de login "root" et le mot de passe "root" pour MAMP sur Mac
+ * ou "" pour une utilisation sur pc
+ */
 function db_connect()
 {
 	// global $host;
@@ -33,6 +39,15 @@ function validation_utilisateur()
 	return 1;
 }
 
+/**
+ * Fonction contrôle de temps
+ *
+ * Si un utilisateur se connecte en dehors des heures de commandes
+ * possibles (entre 06h00 et 08h00 par défaut), il recevra un message
+ * comme quoi il n'est pas possible de commander.
+ *
+ * @ return un boolean: 1 = commande possible / 0 = commande pas possible
+ */
 function check_time()
 {
 	//Possibilité de passer des commandes entre 6h et 8h du matin
@@ -52,6 +67,14 @@ function check_time()
 	return $status;
 }
 
+/**
+ * Fonction de récupération des produits dans la DB
+ *
+ * Sélectionne tous les produits de la base de donnée "produis" db_connect
+ * la quantité est supérieure à zéro. 
+ *
+ * @ return un boolean: 1 = commande possible / 0 = commande pas possible
+ */
 function recuperationproduits($db)
 {
 	$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');

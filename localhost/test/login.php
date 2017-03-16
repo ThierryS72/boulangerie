@@ -1,4 +1,13 @@
 <?php
+/**
+ * Page de login
+ *
+ * L'accès au site de réservation se fait au moyen de cette page de login.
+ *
+ * @author André Mooser <andre.mooser@bluewin.ch>
+ * @author Thierry Semon <thierry.semon@space.unibe.ch>
+ */
+
 	// First start a session. This should be right at the top of your login page.
 	session_start();
 
