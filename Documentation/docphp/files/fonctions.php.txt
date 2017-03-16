@@ -101,9 +101,6 @@ function recuperationproduits($db)
  *
  * @return $produitPossible
  *
- * @todo récuper la date du jour et ne soustaire que les produits commandés
- * ce jour
- *
  */
 function soustraireproduitscommandes($db, &$produitPossible)
 {
@@ -116,16 +113,6 @@ function soustraireproduitscommandes($db, &$produitPossible)
 	}
 }
 
-/**
- * Fonction qui soustrait les produits que l'on vient de choisir
- *
- * Reçoit les produits encore disponibles
- * (extraits de soustraireproduitscommandes) et y enlève les produits que
- * l'on sélectionne pour la commande, mais qui ne sont pas encore passés
- * dans la table "commnades"
- *
- * @return $produitPossible
- */
 function soustraireproduitsencours($commandes, &$produitPossible)
 {
 	foreach ($commandes as $TimeStamp => $commande) {
@@ -149,11 +136,7 @@ function a($u, $t, $a) {
 	. '</a>';
 }
 
-/**
- * Fonction qui crée un tableau <table> en fonction des paramètres reçus
- *
- * 
- */
+
 function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_page, &$parametre) {
 	$string = "<table border=1>"
 	         . "<tr>";
@@ -219,3 +202,4 @@ function getcol($a, $c) {
    }
    return $x;
 }
+
