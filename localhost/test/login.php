@@ -4,11 +4,14 @@
  *
  * L'accès au site de réservation se fait au moyen de cette page de login.
  *
+ * @todo mettre en oeuvre le hashage du mot de passe -> voir comment créer les mots
+ * de passe hashés dans la table dee la base de données.
+ *
  * @author André Mooser <andre.mooser@bluewin.ch>
- * @author Thierry Semon <thierry.semon@space.unibe.ch>
+ * @author Thierry Sémon <thierry.semon@space.unibe.ch>
  */
 
-	// First start a session. This should be right at the top of your login page.
+	// Initialisation de la session.
 	session_start();
 
   require "fonctions.php";
@@ -17,30 +20,30 @@
 
   $url_page = $_SERVER['PHP_SELF'];
 
-	// Check to see if this run of the script was caused by our login submit button being clicked.
+	// Test pour savoir si le lancement du script est causé par un click sur le bouton login.
 	if (isset($_POST['login-submit'])) {
-		// Also check that our email address and password were passed along. If not, jump
-		// down to our error message about providing both pieces of information.
+		// Vérifie que l'adresse e-mail et le mot de passe ont été transmis.
+		// Si ce n'est pas le cas, on va au message d'erreur à propos des deux éléments d'information.
 		if (isset($_POST['emailaddress']) && isset($_POST['pass'])) {
 			$email = $_POST['emailaddress'];
 			$pass = $_POST['pass'];
 
 
-			// Connect to the database and select the user based on their provided email address.
-			// Be sure to retrieve their password and any other information you want to save for the user session.
+			// Connexion à la base de données et sélection de l'utilisateur sur la base de l'adresse mail fournie.
+			// Extraction du mot de passe et des autres informations nécessaires pour la session.
 $db = db_connect();
       $result = $db->query("SELECT id, email, password, nom, prenom, entreprise, level FROM boulangerie.utilisateurs WHERE email = '" . $email . "'");
       $row = $result->fetch(PDO::FETCH_ASSOC);
-			// If the user record was found, compare the password on record to the one provided hashed as necessary.
-			// If successful, now set up session variables for the user and store a flag to say they are authorized.
-			// These values follow the user around the site and will be tested on each page.
+			// Si les informations utilisateurs ont été trouvées, comparaison du mot de passe fourni.
+			// En cas de succès, création de variables de session pour l'utilisateur et d'un flag d'authorisation.
+			// Ces données suivent l'utilisateur sur tout le site et sont (peuvent être) testées sur chaque page.
     if (($row !== false) && ($result->rowCount() > 0)) {
 
 				// if ($row['password'] == hash('sha256', $pass)) {
         if ($row['password'] == $pass) {
 
-					// is_auth is important here because we will test this to make sure they can view other pages
-					// that are needing credentials.
+					// is_auth est important et est testé sur les autres pages pour savoir
+					// si l'accès y est autorisé ou non
 					$_SESSION['is_auth'] = true;
 					$_SESSION['user_level'] = $row['level'];
 					$_SESSION['user_id'] = $row['id'];
@@ -48,29 +51,30 @@ $db = db_connect();
 					$_SESSION['user_prenom'] = $row['prenom'];
 					$_SESSION['user_entreprise'] = $row['entreprise'];
 
-					// Once the sessions variables have been set, redirect them to the landing page / home page.
+					// Dès que les variables de session on été initialisées, redirection sur la page welcome.php.
 					header('location: welcome.php');
 					exit;
 				}
 				else {
-					$error = "1 Invalid email or password. Please try again.";
+					$error = "Email ou mot de passe non-valide. Essayez à nouveau SVP.";
 				}
 			}
 			else {
-				$error = "2 Invalid email or password. Please try again.";
+				$error = "Email ou mot de passe non-valide. Essayez à nouveau SVP.";
 			}
 		}
 		else {
-			$error = "Please enter an email and password to login.";
+			$error = "Saisissez un email et un mot de passe pour vous connecter.";
 		}
 	}
 ?>
 <!--
-/* Formulaire de saisie du login
+/**
+* Formulaire de saisie du login
 *
+* Le login de tous les utilisateurs se fait au moyen de ce formulaire
 */
  -->
-<!-- This form will post to current page and trigger our PHP script. -->
 <h2>Login et mots de passe pour les tests</h2>
 <p>email, mot de passe, type d'utilisateur</p>
 <p>'thierry.semon@space.unibe.ch', 'thierry', 'manager'</p>

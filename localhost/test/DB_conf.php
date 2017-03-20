@@ -1,4 +1,15 @@
 <?php
+/**
+ * Page contenant les informations de configuration de la base de donnée
+ *
+ * Actuellement, cette page est "contournée", car il y a un souci avec db_connect()
+ *
+ * @todo voir problème décrit dans la fonction db_connect() pour rétablir cette page
+ *
+ * @author André Mooser <andre.mooser@bluewin.ch>
+ * @author Thierry Sémon <thierry.semon@space.unibe.ch>
+ */
+
 // configuration
 $host = "localhosti";
 $dbname = "boulangeriei";
