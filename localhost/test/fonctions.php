@@ -92,6 +92,13 @@ function check_time()
 	return $status;
 }
 
+function aujourdhui()
+{
+	$maintenant = date("Y-m-d");
+	return $maintenant;
+	// echo $aujourdhui . "<br/>";
+}
+
 /**
  * Fonction de récupération des produits dans la DB
  *
@@ -135,7 +142,8 @@ function recuperationproduits($db)
 function soustraireproduitscommandes($db, &$produitPossible)
 {
 	foreach ($produitPossible as $key => $value) {
-		$result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "'");
+		$result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "' AND time_stamp LIKE'" . aujourdhui() . "%'");
+		// $result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "'");
 		while($row = $result->fetch(PDO::FETCH_ASSOC))
 		{
 			$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $row['quantite'];
@@ -247,6 +255,15 @@ function elt2($a, $t = "td", $color = '"#CCCCFF"') {
       return "<" . $t . " bgcolor = " . $color . ">" . $a . "</" . $t . ">";
 }
 
+/**
+ * Fonction getcol()
+ *
+ * Cette fonction permet de .....
+ *
+ * @todo finir de compléter la description
+ *
+ * @return $x
+ */
 function getcol($a, $c) {
    $x = array();
 

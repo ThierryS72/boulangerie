@@ -1,10 +1,26 @@
 <?php
 /**
+ * Page contenant les fonctions
+ *
+ * Les fonctions appelées depuis les pages login.php et welcome.php se
+ * trouvent.
+ *
+ * @author André Mooser <andre.mooser@bluewin.ch>
+ * @author Thierry Sémon <thierry.semon@space.unibe.ch>
+ */
+
+
+
+
+/**
  * Fonction connexion à la base de données
  *
  * Permet de se connecter à la base de donnée boulangerie avec le
  * nom de login "root" et le mot de passe "root" pour MAMP sur Mac
  * ou "" pour une utilisation sur pc
+ *
+ * @todo Problème avec $host et$dbname: on peux mettre n'importe quoi dans
+ * ces 2 variables et la connexion se fait quand même -> voir pourquoi ???
  */
 function db_connect()
 {
@@ -17,9 +33,6 @@ function db_connect()
 	$user = "root";
 	$pw = "root";
 
-	/*
-	*Problème avec $host et$dbname: je peux mettre n'importe quoi dans ces 2 variables et la connexion se fait quand même ???
-	*/
 	try
 	{
 		// connection à base de donnée PDO
@@ -34,6 +47,18 @@ function db_connect()
 		echo "PDO: " . htmlentities($e->getMessage());
 	}
 }
+
+/**
+ * Fonction de validation des utilisateurs
+ *
+ * Cette fonction retoure "true (1)" si l'utilisateur est valide. Actuellement
+ * figé sur "true".
+ *
+ * @return "true" ou "false" = 1 ou 0
+ *
+ * @todo utiliser le résultat du login ou programmer différement pour qu'elle
+ * réagisse à une condition et ne soit plus figée sur "true"
+ */
 function validation_utilisateur()
 {
 	return 1;
@@ -76,7 +101,8 @@ function check_time()
  * produit, lui-même étant un tableau associatif comprenant la quantité et
  * le prix.
  *
- * @return le tableau associatif $produitdefinition
+ * @return le tableau associatif $produitdefinition contenant tous les produits
+ * existants avec leur quantité maximale
  */
 function recuperationproduits($db)
 {
@@ -99,7 +125,11 @@ function recuperationproduits($db)
  * y soustrait pour chacun la quantité de produits qui figurent déjà dans
  * la table commandes et retourne les produits encore disponibles
  *
- * @return $produitPossible
+ * @return $produitPossible = produits existants moins les produits déjà
+ * commandés par tous les clients
+ *
+ * @todo récuper la date du jour et ne soustaire que les produits commandés
+ * ce jour
  *
  */
 function soustraireproduitscommandes($db, &$produitPossible)
@@ -113,6 +143,17 @@ function soustraireproduitscommandes($db, &$produitPossible)
 	}
 }
 
+/**
+ * Fonction qui soustrait les produits que l'on vient de choisir
+ *
+ * Reçoit les produits encore disponibles
+ * (extraits de soustraireproduitscommandes) et y enlève les produits que
+ * l'on sélectionne pour la commande, mais qui ne sont pas encore passés
+ * dans la table "commnades"
+ *
+ * @return $produitPossible = produits existants moins les produits déjà commandés
+ * par tous les clients moins les produite en cours de commande par le client actuel
+ */
 function soustraireproduitsencours($commandes, &$produitPossible)
 {
 	foreach ($commandes as $TimeStamp => $commande) {
@@ -136,7 +177,19 @@ function a($u, $t, $a) {
 	. '</a>';
 }
 
-
+/**
+ * Cette fonction crée un tableau <table> en fonction des paramètres reçus
+ *
+ * Reçoit le type (1, 2 ou 3), le nom des colonnes, les éléments de chaque colonne
+ * la ligne de requete à la base de données, la couleur de la ligne d'entete,
+ * l'URL sur l'élément, les paramètres
+ *
+ * @return $string qui contient les balises et les données de création du tableau
+ *
+ * @todo voir si possible de simplifier encore cette fonction en y passant les
+ * paramètres de façon différente ou imbriquer différemment les if afin
+ * d'éviter la redondance
+ */
 function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_page, &$parametre) {
 	$string = "<table border=1>"
 	         . "<tr>";
@@ -194,6 +247,15 @@ function elt2($a, $t = "td", $color = '"#CCCCFF"') {
       return "<" . $t . " bgcolor = " . $color . ">" . $a . "</" . $t . ">";
 }
 
+/**
+ * Fonction getcol()
+ *
+ * Cette fonction permet de .....
+ *
+ * @todo finir de compléter la description
+ *
+ * @return $x
+ */
 function getcol($a, $c) {
    $x = array();
 

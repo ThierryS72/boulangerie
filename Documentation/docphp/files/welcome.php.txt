@@ -1,19 +1,30 @@
 <?php
+/**
+ * Page welcome.php
+ *
+ * Page principale du site
+ *
+ * @author André Mooser <andre.mooser@bluewin.ch>
+ * @author Thierry Sémon <thierry.semon@space.unibe.ch>
+ */
+
+
+
 session_start(); // a placer en tout premier, avant HTML car utilise un cookie
 
-// Test the session to see if is_auth flag was set (meaning they logged in successfully)
-// If test fails, send the user to login.php and prevent rest of page being shown.
+// Teste la session pour voir si le flag is_auth est activé (signifie que le login est ok)
+// Si pas ok, renvoie l'utilisateur sur la page login.php et empeche l'accès au reste de la page.
 if (!isset($_SESSION["is_auth"])) {
 	header("location: login.php");
 	exit;
 }
 else if (isset($_REQUEST['logout']) && $_REQUEST['logout'] == true) {
-	// At any time we can logout by sending a "logout" value which will unset the "is_auth" flag.
-	// We can also destroy the session if so desired.
+	// On peut en tout temps faire un logout en envoyant un "logout" qui va déselectionner le flag is_auth.
+	// On peut aussi détruire la session si désiré.
 	unset($_SESSION['is_auth']);
 	session_destroy();
 
-	// After logout, send them back to login.php
+	// Après le logout, renvoie sur la page login.php
 	header("location: login.php");
 	exit;
 }
@@ -29,7 +40,6 @@ if (isset($_SESSION['commandes'])) {
 }
 else
 {
-	// $commandes = "";
 	unset ($commandes);
 	unset($_SESSION['commandes']);
 }
@@ -44,17 +54,16 @@ else
 
 if(validation_utilisateur())
 {
-	// TODO: Extraire les spécifications de utilisateurs de base de donnée utilisateur dans validation_utilisateur()
+	// @TODO: Extraire les spécifications de utilisateurs de base de donnée utilisateur dans validation_utilisateur()
 	// Test: mockup qui contient les spécifications des utilisateurs
-	$utilisateur['nom'] = $_SESSION['user_nom']; /*"Sémon";*/
-	$utilisateur['prenom'] = $_SESSION['user_prenom']; /*"Thierry";*/
-	$utilisateur['entreprise'] = $_SESSION['user_entreprise']; /*"Moulin SA";*/
-	//!!!!!Changer manuellement le type de l'utilisateur (client ou manager) pour simuler les interfaces!!!!
-	$utilisateur['type'] = $_SESSION['user_level']; /*"client"; //"manager" ou "client" */
+	$utilisateur['nom'] = $_SESSION['user_nom'];
+	$utilisateur['prenom'] = $_SESSION['user_prenom'];
+	$utilisateur['entreprise'] = $_SESSION['user_entreprise'];
+	$utilisateur['type'] = $_SESSION['user_level']; //"manager" ou "client"
 
 	$db = db_connect();
 
-	if ($utilisateur['type'] == "manager") //manager
+	if ($utilisateur['type'] == "manager")
 	{
 		if(isset($_POST['nom']) && isset($_POST['quantite']))
 		{
@@ -155,7 +164,6 @@ if(validation_utilisateur())
 								try {
 									$id = $db->LastInsertId();
 									$st = $db->prepare($sql_query);
-									// $p = array( 'Semon', 'Thierry', 'Moulin SA', 'ballon', '1', '10', '2017-03-07 09:38:21');
 									$p = array($utilisateur['nom'], $utilisateur['prenom'], $utilisateur['entreprise'], $commande['produit'], $commande['quantite'], $commande['prix-total'], $TimeStamp);
 									$st->execute($p);
 
@@ -192,16 +200,13 @@ if(validation_utilisateur())
 				{
 					$clé = $row['nom'];
 					$valeur = $row['quantite'];
-					//prix : $valeur = $row['quantite'];
-// $produitPossible[$clé] = $valeur;
 				}
-				// print_r ($produitPossible);
 
-
+				/* Compteur de session utilisé pour des tests
 				echo"ceci est le compteur de session:" ;
 				print_r($_SESSION['compteur']);
 				$_SESSION['compteur'] = $_SESSION['compteur'] + 1;
-
+				*/
 
 
 
@@ -214,27 +219,21 @@ if(validation_utilisateur())
 					<fieldset style="border: 3px double #333399">
 						<legend>Sélectionnez un produit</legend>
 						<?php
-
 						$produitPossible = recuperationproduits($db);
 						soustraireproduitscommandes($db, $produitPossible);
-
 						soustraireproduitsencours($commandes, $produitPossible);
-						// $produitPossible = recuperationproduits($db);
 						echo '<select name="' . urlencode('produitform') . '" onchange="document.forms[\'commande\'].submit();">';
 						echo '<option value="-1">- - - Choisissez un produit - - -</option>';
 						foreach($produitPossible as $key => $value)
 						{
-							// echo '<option value="' . htmlentities($key) . '" >' . htmlentities($key) . '</option>';
 							echo '<option value="' . htmlentities($key) . '" ' . ((isset($prodcommande) && $prodcommande == $key)?" selected=\"selected\"":null) . '>' . htmlentities($key) . '</option>';
 						}
 						echo '</select>';
 						echo '<select name="quantiteform">';
 						for ($i=1; $i < $produitPossible[$prodcommande]['quantite']+1; $i++) {
-						// for ($i=1; $i < $produitPossible[$prodcommande]+1; $i++) {
 							echo '<option value="' .htmlentities($i). '" ' . '>' . htmlentities($i) . '</option>';
 						}
 						echo '</select>';
-						// $_POST['produitform']='';
 						?>
 
 						<br /><input type="submit" name="ok" id="ok" value="Sélectionner" />
@@ -257,15 +256,10 @@ if(validation_utilisateur())
 																					 "quantite" => $_POST["quantiteform"],
 																				 	 "prix" => $produitPossible[$prodcommande]['prix'],
 																				 	 "prix-total" => $_POST["quantiteform"] * $produitPossible[$prodcommande]['prix']);
-					// $produitasoustraire = array("produit" => $_POST["produitform"], "quantite" => $_POST["quantiteform"]);
-// print_r($commandes);
-// soustraireproduitsencours($commandes, $produitPossible);
 					// sauvegarde dans la Session et affichage sous forme de tableau
-// echo"<br/>Etat de la commande --: " . count($commandes);
 					$_SESSION['commandes'] = $commandes;
-					// $_SESSION['asoustraire'] = $produitasoustraire;
 
-				} // mis fin du if ici
+				}
 
 //Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?
 					$type = 3;

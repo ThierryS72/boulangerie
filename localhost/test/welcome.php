@@ -173,14 +173,16 @@ if(validation_utilisateur())
 								}
 
 								};
-								echo "Commande effectuée avec succès<br/>";
+								// echo aujourdhui() . "<br/>";
+								echo "Commande du ". aujourdhui() . " effectuée avec succès<br/>";
 								$type = 2;
 								$col_nom = array('quantité commandée', 'nom du produit', 'prix total');
 								$col_element = array('quantite', 'produit', 'prix_total');
 								$color = '"#CCCCFF"';
 								$parametre = 0;
 
-								$sql_query = ("SELECT " . join(", ", $col_element) . " FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "'");
+								$sql_query = ("SELECT " . join(", ", $col_element) . " FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "' AND time_stamp LIKE'" . aujourdhui() . "%'");
+
 
 								echo '<p><strong>Lise des produits commandés:</strong ></p>';
 								echo makeTable($type, $col_nom, $col_element, $db->query($sql_query), $color, $url_page, $parametre);
@@ -200,14 +202,13 @@ if(validation_utilisateur())
 				{
 					$clé = $row['nom'];
 					$valeur = $row['quantite'];
-
+				}
 
 				/* Compteur de session utilisé pour des tests
 				echo"ceci est le compteur de session:" ;
 				print_r($_SESSION['compteur']);
 				$_SESSION['compteur'] = $_SESSION['compteur'] + 1;
 				*/
-
 
 
 				/* On récupère si il existe le nom du produit commandé par le formulaire */

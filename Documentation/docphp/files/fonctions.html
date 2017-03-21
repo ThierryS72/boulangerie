@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">32</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">25</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">1</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
                                 </a>
                             </li>
                             <li>
@@ -138,7 +138,7 @@
             <div class="accordion-heading">
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1014520410" class="accordion-body collapse in">
+            <div id="namespace-1492419880" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -160,8 +160,9 @@
 
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
                     <h1><small></small>fonctions.php</h1>
-                    <p><em></em></p>
-                    
+                    <p><em>Page contenant les fonctions</em></p>
+                    <p>Les fonctions appelées depuis les pages login.php et welcome.php se
+trouvent.</p>
 
                     
                     
@@ -176,7 +177,15 @@
                     </dl>
                     <h2>Tags</h2>
                     <table class="table table-condensed">
-                                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                                                    <tr>
+                                <th>
+                                    author
+                                </th>
+                                <td>
+                                                                            <p>André Mooser <a href="mailto:andre.mooser@bluewin.ch">andre.mooser@bluewin.ch</a></p>
+                                                                            <p>Thierry Sémon <a href="mailto:thierry.semon@space.unibe.ch">thierry.semon@space.unibe.ch</a></p>
+                                                                    </td>
+                            </tr>
                                             </table>
 
                 </aside>
@@ -223,6 +232,15 @@ ou &quot;&quot; pour une utilisation sur pc</p>
                                                                                             <p>Default</p>
                                                     </td>
                     </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                                                            <p>Problème avec $host et$dbname: on peux mettre n'importe quoi dans
+ces 2 variables et la connexion se fait quand même -&gt; voir pourquoi ???</p>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -233,13 +251,17 @@ ou &quot;&quot; pour une utilisation sur pc</p>
             <article class="method">
                 <h3 class=" ">validation_utilisateur()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">validation_utilisateur() </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">validation_utilisateur() : \&quot;true&quot;</pre>
+                <p><em>Fonction de validation des utilisateurs</em></p>
+                <p>Cette fonction retoure &quot;true (1)&quot; si l'utilisateur est valide. Actuellement
+figé sur &quot;true&quot;.</p>
 
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    \"true"
+                                            &mdash; <p>ou &quot;false&quot; = 1 ou 0</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -256,6 +278,15 @@ ou &quot;&quot; pour une utilisation sur pc</p>
                         </th>
                         <td>
                                                                                             <p>Default</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                                                            <p>utiliser le résultat du login ou programmer différement pour qu'elle
+réagisse à une condition et ne soit plus figée sur &quot;true&quot;</p>
                                                     </td>
                     </tr>
                             </table>
@@ -328,7 +359,8 @@ le prix.</p>
                 
                                     <h4>Returns</h4>
                     \le
-                                            &mdash; <p>tableau associatif $produitdefinition</p>
+                                            &mdash; <p>tableau associatif $produitdefinition contenant tous les produits
+existants avec leur quantité maximale</p>
                                     				
                             </article>
         </div>
@@ -381,6 +413,8 @@ la table commandes et retourne les produits encore disponibles</p>
                 
                                     <h4>Returns</h4>
                     \$produitPossible
+                                            &mdash; <p>= produits existants moins les produits déjà
+commandés par tous les clients</p>
                                     				
                             </article>
         </div>
@@ -400,6 +434,15 @@ la table commandes et retourne les produits encore disponibles</p>
                                                                                             <p>Default</p>
                                                     </td>
                     </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                                                            <p>récuper la date du jour et ne soustaire que les produits commandés
+ce jour</p>
+                                                    </td>
+                    </tr>
                             </table>
         </aside>
     </div>
@@ -410,9 +453,12 @@ la table commandes et retourne les produits encore disponibles</p>
             <article class="method">
                 <h3 class=" ">soustraireproduitsencours()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">soustraireproduitsencours(  <span class="argument">$commandes</span>,   <span class="argument">$produitPossible</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">soustraireproduitsencours(  <span class="argument">$commandes</span>,   <span class="argument">$produitPossible</span>) : \$produitPossible</pre>
+                <p><em>Fonction qui soustrait les produits que l&#039;on vient de choisir</em></p>
+                <p>Reçoit les produits encore disponibles
+(extraits de soustraireproduitscommandes) et y enlève les produits que
+l'on sélectionne pour la commande, mais qui ne sont pas encore passés
+dans la table &quot;commnades&quot;</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -429,7 +475,11 @@ la table commandes et retourne les produits encore disponibles</p>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    \$produitPossible
+                                            &mdash; <p>= produits existants moins les produits déjà commandés
+par tous les clients moins les produite en cours de commande par le client actuel</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -511,9 +561,11 @@ la table commandes et retourne les produits encore disponibles</p>
             <article class="method">
                 <h3 class=" ">makeTable()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">makeTable(  <span class="argument">$type</span>,   <span class="argument">$col_nom</span>,   <span class="argument">$col_element</span>,   <span class="argument">$db_request</span>,   <span class="argument">$color</span>,   <span class="argument">$url_page</span>,   <span class="argument">$parametre</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">makeTable(  <span class="argument">$type</span>,   <span class="argument">$col_nom</span>,   <span class="argument">$col_element</span>,   <span class="argument">$db_request</span>,   <span class="argument">$color</span>,   <span class="argument">$url_page</span>,   <span class="argument">$parametre</span>) : \$string</pre>
+                <p><em>Cette fonction crée un tableau &lt;table&gt; en fonction des paramètres reçus</em></p>
+                <p>Reçoit le type (1, 2 ou 3), le nom des colonnes, les éléments de chaque colonne
+la ligne de requete à la base de données, la couleur de la ligne d'entete,
+l'URL sur l'élément, les paramètres</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -555,7 +607,10 @@ la table commandes et retourne les produits encore disponibles</p>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    \$string
+                                            &mdash; <p>qui contient les balises et les données de création du tableau</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -572,6 +627,16 @@ la table commandes et retourne les produits encore disponibles</p>
                         </th>
                         <td>
                                                                                             <p>Default</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                                                            <p>voir si possible de simplifier encore cette fonction en y passant les
+paramètres de façon différente ou imbriquer différemment les if afin
+d'éviter la redondance</p>
                                                     </td>
                     </tr>
                             </table>
@@ -685,9 +750,9 @@ la table commandes et retourne les produits encore disponibles</p>
             <article class="method">
                 <h3 class=" ">getcol()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">getcol(  <span class="argument">$a</span>,   <span class="argument">$c</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">getcol(  <span class="argument">$a</span>,   <span class="argument">$c</span>) : \$x</pre>
+                <p><em>Fonction getcol()</em></p>
+                <p>Cette fonction permet de .....</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -704,7 +769,9 @@ la table commandes et retourne les produits encore disponibles</p>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    \$x
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -721,6 +788,14 @@ la table commandes et retourne les produits encore disponibles</p>
                         </th>
                         <td>
                                                                                             <p>Default</p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                                                            <p>finir de compléter la description</p>
                                                     </td>
                     </tr>
                             </table>
@@ -777,7 +852,7 @@ la table commandes et retourne les produits encore disponibles</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on March 16th, 2017 at 15:37.
+                    on March 20th, 2017 at 13:31.
                 </section>
             </section>
         </section>

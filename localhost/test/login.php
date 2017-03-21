@@ -5,7 +5,7 @@
  * L'accès au site de réservation se fait au moyen de cette page de login.
  *
  * @todo mettre en oeuvre le hashage du mot de passe -> voir comment créer les mots
- * de passe hashés dans la table dee la base de données.
+ * de passe hashés dans la table de la base de données.
  *
  * @author André Mooser <andre.mooser@bluewin.ch>
  * @author Thierry Sémon <thierry.semon@space.unibe.ch>
