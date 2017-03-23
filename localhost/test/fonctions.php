@@ -272,3 +272,25 @@ function getcol($a, $c) {
    }
    return $x;
 }
+
+/**
+ * Fonction printpdf
+ *
+ * Imprime en pdf la page reçue par le paramètre $content
+ *
+ * @return la page imprimée
+ */
+function printpdf($content) {
+	require_once(dirname(__FILE__).'/html2pdf/vendor/autoload.php');
+	try {
+	  $html2pdf = new HTML2PDF('P','A4','fr');
+	  $html2pdf->SetDefaultFont('Arial');
+	  $html2pdf->WriteHTML($content, isset($_GET['vuehtml']));
+	  $html2pdf->pdf->IncludeJS('print(true)'); // Devrait afficher les options d'impressions - ne semble pas fonctionner sur Mac
+	  $html2pdf->pdf->SetDisplayMode('fullpage'); // Affichage d'une page entière
+	  $html2pdf->Output('testpdf.pdf');
+	}
+	catch(HTML2PDF_exception $e) {
+	  echo $e;
+	}
+}
