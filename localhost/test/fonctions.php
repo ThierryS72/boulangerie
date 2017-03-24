@@ -294,3 +294,12 @@ function printpdf($content) {
 	  echo $e;
 	}
 }
+
+function extractionInfo($col_element, $db_request, &$resultat) {
+	$resultat = array();
+	foreach (($db_request) as $row) {
+		// $resultat[] = $row['entreprise'];
+		$resultat[] = getcol($row, $col_element);
+
+	}
+}

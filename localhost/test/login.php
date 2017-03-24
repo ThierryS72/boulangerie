@@ -76,11 +76,13 @@ $db = db_connect();
 */
  -->
 <h2>Login et mots de passe pour les tests</h2>
-<p>email, mot de passe, type d'utilisateur</p>
-<p>'thierry.semon@space.unibe.ch', 'thierry', 'manager'</p>
-<p>'toto@toto.ch', 'toto', 'client'</p>
-<p>'tata@tata.ch', 'tata', 'client'</p>
-<p>'titi@titi.ch', 'titi', 'manager'</p><br/>
+<p>entreprise, email, mot de passe, type d'utilisateur</p>
+<p>'Moulin SA', 'thierry.semon@space.unibe.ch', 'thierry', 'manager'</p>
+<p>'Entreprise 1', 'toto@toto.ch', 'toto', 'client'</p>
+<p>'Entreprise 2', 'tata@tata.ch', 'tata', 'client'</p>
+<p>'Boulangerie', 'titi@titi.ch', 'titi', 'manager'</p>
+<p>'Entreprise 3', 'albert@albert.ch', 'albert', 'client'</p>
+<p>'Entreprise 1', 'andre@andre.ch', 'andre', 'client'</p><br/>
 <form method="post" action="<?php echo $url_page ?>">
 	<div class="login-body">
 		<?php

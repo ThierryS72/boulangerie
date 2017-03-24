@@ -183,10 +183,9 @@ if(validation_utilisateur())
 
 								$sql_query = ("SELECT " . join(", ", $col_element) . " FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "' AND time_stamp LIKE'" . aujourdhui() . "%'");
 
-
-								echo '<p><strong>Lise des produits commandés:</strong ></p>';
+								echo '<p><strong>Liste des produits commandés:</strong ></p>';
 								echo makeTable($type, $col_nom, $col_element, $db->query($sql_query), $color, $url_page, $parametre);
-								echo "<h2>Montant de la commande: " . htmlentities($parametre) . "</h2>";
+								echo "<h2>Montant de la commande: Fr.- " . htmlentities(number_format($parametre, 2)) . "</h2>";
 								unset($_SESSION['commandes']); // Suppression de la variable de session pour recommencer avec une commande neutre
 								unset($_SESSION['asoustraire']);
 								session_destroy();
