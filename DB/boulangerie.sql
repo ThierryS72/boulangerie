@@ -10,7 +10,6 @@ CREATE TABLE produits(id INT AUTO_INCREMENT NOT NULL,
       nom VARCHAR(100) NOT NULL,
       prix NUMERIC(10,2) NOT NULL,
 			quantite INTEGER NOT NULL,
-			quantite_restante INTEGER,
 			time_stamp DATETIME,
       PRIMARY KEY(id),
       UNIQUE(nom)) ENGINE=InnoDB CHARSET=utf8;

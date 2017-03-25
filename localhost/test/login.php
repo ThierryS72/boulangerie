@@ -73,36 +73,49 @@ $db = db_connect();
 * Le login de tous les utilisateurs se fait au moyen de ce formulaire
 */
  -->
-<h2>Login et mots de passe pour les tests</h2>
-<p>entreprise, email, mot de passe, type d'utilisateur</p>
-<p>'Moulin SA', 'thierry.semon@space.unibe.ch', 'thierry', 'manager'</p>
-<p>'Entreprise 1', 'toto@toto.ch', 'toto', 'client'</p>
-<p>'Entreprise 2', 'tata@tata.ch', 'tata', 'client'</p>
-<p>'Boulangerie', 'titi@titi.ch', 'titi', 'manager'</p>
-<p>'Entreprise 3', 'albert@albert.ch', 'albert', 'client'</p>
-<p>'Entreprise 1', 'andre@andre.ch', 'andre', 'client'</p><br/>
-<form method="post" action="<?php echo $url_page ?>">
-	<div class="login-body">
-		<?php
-			if (isset($error)) {
-				echo "<div class='errormsg'>$error</div>";
-			}
-		?>
-		<div class="form-row">
-			<label for="emailaddress">Email:</label>
-			<input type="text" name="emailaddress" id="emailaddress" placeholder="Email Address" maxlength="100">
-		</div>
-		<div class="form-row">
-			<label for="pass">Password:</label>
-			<input type="password" name="pass" id="pass" placeholder="Password" maxlength="100">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style type="text/css">
+		main { padding: 60px; }
+	</style>	
+	<title>Liste des produits</title>
+</head>
+<main class="container">
+	<h2>Login et mots de passe pour les tests</h2><br/>
+	<p>entreprise, email, mot de passe, type d'utilisateur</p>
+	<p>'Moulin SA', 'thierry.semon@space.unibe.ch', 'thierry', 'manager'</p>
+	<p>'Entreprise 1', 'toto@toto.ch', 'toto', 'client'</p>
+	<p>'Entreprise 2', 'tata@tata.ch', 'tata', 'client'</p>
+	<p>'Boulangerie', 'titi@titi.ch', 'titi', 'manager'</p>
+	<p>'Entreprise 3', 'albert@albert.ch', 'albert', 'client'</p>
+	<p>'Entreprise 1', 'andre@andre.ch', 'andre', 'client'</p><br/>
+	<form method="post" action="<?php echo $url_page ?>" class="form-inrow">
+		<div class="login-body form-inline">
+			<?php
+				if (isset($error)) {
+					echo "<div class='errormsg'>$error</div>";
+				}
+			?>
+			<div class="form-group">
+				<label for="emailaddress">Email:</label>
+				<input type="text" name="emailaddress" id="emailaddress" placeholder="Email Address" maxlength="100">
+			</div>
+			<div class="form-group">
+				<label for="pass">Password:</label>
+				<input type="password" name="pass" id="pass" placeholder="Password" maxlength="100">
+			</div>
+
+			<div class="login-button-row form-group">
+				<input type="submit" name="login-submit" id="login-submit" value="Login" title="Login now" class="btn btn-success">
+			</div>
 		</div>
 
-		<div class="login-button-row">
-			<input type="submit" name="login-submit" id="login-submit" value="Login" title="Login now">
-		</div>
-	</div>
-</form>
-
+	</form>
+</main>
 <!--
 /* Fin du formulaire de saisie du login
 *
