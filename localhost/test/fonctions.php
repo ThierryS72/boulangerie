@@ -143,8 +143,7 @@ function recuperationproduits($db)
 function soustraireproduitscommandes($db, &$produitPossible)
 {
 	foreach ($produitPossible as $key => $value) {
-		$result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "' AND time_stamp LIKE'" . aujourdhui() . "%'");
-		// $result = $db->query("SELECT * FROM boulangerie.commandes where produit ='" . $key . "'");
+		$result = $db->query('SELECT * FROM boulangerie.commandes where produit ="' . $key . '" AND time_stamp LIKE"' . aujourdhui() . '%"');
 		while($row = $result->fetch(PDO::FETCH_ASSOC))
 		{
 			$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $row['quantite'];
@@ -184,7 +183,7 @@ function a($u, $t, $a) {
 		return urlencode($x) . "=" . urlencode($a[$x]);
 	};
 
-	return '<a href="'
+	return '<a class="btn btn-default btn-xs "' . 'href="'
 	. $u . '?'
 	. join("&amp;", array_map($callback, array_keys($a)))
 	. '">'
@@ -202,7 +201,7 @@ function a($u, $t, $a) {
  * @return $string qui contient les balises et les données de création du tableau
 */
 function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_page, &$parametre) {
-	$string = "<table border=1>"
+	$string = "<table class='table table-bordered table-striped table-hover'>"
 	         . "<tr>";
 	foreach ($col_nom as $c) {
 						$string = $string . elt($c, "th", $color);
