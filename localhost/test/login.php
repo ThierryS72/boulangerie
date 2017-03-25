@@ -39,9 +39,7 @@ $db = db_connect();
 			// Ces données suivent l'utilisateur sur tout le site et sont (peuvent être) testées sur chaque page.
     if (($row !== false) && ($result->rowCount() > 0)) {
 
-				// if ($row['password'] == hash('sha256', $pass)) {
-        if ($row['password'] == $pass) {
-
+				if (password_verify($pass, $row['password'])){
 					// is_auth est important et est testé sur les autres pages pour savoir
 					// si l'accès y est autorisé ou non
 					$_SESSION['is_auth'] = true;

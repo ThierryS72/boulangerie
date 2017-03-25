@@ -31,7 +31,7 @@ function db_connect()
 	$host = "localhost";
 	$dbname = "boulangerie";
 	$user = "root";
-	$pw = "root";
+	$pw = "";
 
 	try
 	{
@@ -43,8 +43,9 @@ function db_connect()
 	}
 	catch (PDOException $e)
 	{
-		// En cas d'erreur: affichage message (et exit?)
+		// En cas d'erreur: affichage message et exit
 		echo "PDO: " . htmlentities($e->getMessage());
+		exit;
 	}
 }
 
@@ -172,6 +173,12 @@ function soustraireproduitsencours($commandes, &$produitPossible)
 	}
 }
 
+/** 
+ * DESCRIPTION
+ * @return compose un élément a, retourné sous forme de chaîne, avec
+ * l'URL de base $u, le contenu $t et les clés-valeurs de paramètres
+ * d'URL GET.
+ */
 function a($u, $t, $a) {
 	$callback = function($x) use ($a) {
 		return urlencode($x) . "=" . urlencode($a[$x]);
@@ -193,36 +200,28 @@ function a($u, $t, $a) {
  * l'URL sur l'élément, les paramètres
  *
  * @return $string qui contient les balises et les données de création du tableau
- *
- * @todo voir si possible de simplifier encore cette fonction en y passant les
- * paramètres de façon différente ou imbriquer différemment les if afin
- * d'éviter la redondance
- */
+*/
 function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_page, &$parametre) {
 	$string = "<table border=1>"
 	         . "<tr>";
 	foreach ($col_nom as $c) {
-						$string = $string . elt2($c, "th", $color);
+						$string = $string . elt($c, "th", $color);
 	}
 	$string =  $string . "</tr>";
 
-	if ($type==1)
+	if (($type==1)||($type==2))
 	{
 		foreach (($db_request) as $row) {
 			 $string =  $string . "<tr>";
 			 $string =  $string . elt(array_map("htmlentities", getcol($row, $col_element)));
+			 if ($type==1){
 			 $string =  $string . "<td>" . a($url_page, "modifier", array("modifier" => $row['id'])) .
 			 "</td>";
+			 }
 			 $string =  $string .  "</tr>";
-		}
-	}
-	if ($type==2)
-	{
-		foreach (($db_request) as $row) {
-			 $string =  $string . "<tr>";
-			 $string =  $string . elt(array_map("htmlentities", getcol($row, $col_element)));
-			 $string =  $string .  "</tr>";
+			 if ($type==2){
 			 $parametre =  $parametre + $row["prix_total"]; //retourne prix total;
+			 }
 		}
 	}
 	if ($type==3)
@@ -241,28 +240,31 @@ function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_pag
 	return $string;
 }
 
-function elt($a, $t = "td") {
+/**
+/* DESCRIPTION
+ * @return retourne autant d'éléments de type $t que désirés avec les
+ * valeurs du tableau $a dans le cas ou le paramètre $color n'est pas spécifié
+ * dans le cas contraire, on retourne le libellé des colonnes du tableau dans la 
+ * couleur spécifié par le paramètre $color
+ */
+function elt($a, $t = "td", $color = "") {
    // use: accès aux variables de la fonction englobante, dès PHP 5.3
-   $callback = function($s) use ($t) {
-      return "<" . $t . ">" . $s . "</" . $t . ">";
-   };
-
-   return join("", array_map($callback, $a));
-}
-
-function elt2($a, $t = "td", $color = '"#CCCCFF"') {
-   // use: accès aux variables de la fonction englobante, dès PHP 5.3
-      return "<" . $t . " bgcolor = " . $color . ">" . $a . "</" . $t . ">";
+   if ($color == "")
+	 {
+		 $callback = function($s) use ($t) {
+				return "<" . $t . ">" . $s . "</" . $t . ">";
+		 };
+		 return join("", array_map($callback, $a));
+	 }
+	 else
+	 {
+		 return "<" . $t . " bgcolor = " . $color . ">" . $a . "</" . $t . ">";
+	 }
 }
 
 /**
- * Fonction getcol()
- *
- * Cette fonction permet de .....
- *
- * @todo finir de compléter la description
- *
- * @return $x
+/* DESCRIPTION
+ * @return retourne les valeurs du tableau $a dans l'ordre du tableau $c
  */
 function getcol($a, $c) {
    $x = array();
