@@ -1,0 +1,24 @@
+<?php
+/**
+ * create_password.php est utilisé afin de hacher le mot de passe
+ * Une fois haché, il est incororporé manuellement dans la base de donnée
+ * utilisateur
+ * @author André Mooser <andre.mooser@bluewin.ch>
+ * @author Thierry Sémon <thierry.semon@space.unibe.ch>
+ * @todo créer l'inteface pour que le manager puisse ajouter et modifier 
+ * les utilisateurs à sa guise
+*/
+$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+$salt = base64_encode($salt);
+$salt = str_replace('+', '.', $salt);
+$hash = crypt('andre', '$2y$10$'.$salt.'$');
+
+echo $hash;
+echo "</br>";
+
+//Vérification
+if (password_verify('andre', $hash)) {
+    echo 'Le mot de passe est valide !';
+} else {
+    echo 'Le mot de passe est invalide.';
+}
