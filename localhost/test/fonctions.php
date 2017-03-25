@@ -31,7 +31,7 @@ function db_connect()
 	$host = "localhost";
 	$dbname = "boulangerie";
 	$user = "root";
-	$pw = "";
+	$pw = "root";
 
 	try
 	{
@@ -173,7 +173,7 @@ function soustraireproduitsencours($commandes, &$produitPossible)
 	}
 }
 
-/** 
+/**
  * DESCRIPTION
  * @return compose un élément a, retourné sous forme de chaîne, avec
  * l'URL de base $u, le contenu $t et les clés-valeurs de paramètres
@@ -244,7 +244,7 @@ function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_pag
 /* DESCRIPTION
  * @return retourne autant d'éléments de type $t que désirés avec les
  * valeurs du tableau $a dans le cas ou le paramètre $color n'est pas spécifié
- * dans le cas contraire, on retourne le libellé des colonnes du tableau dans la 
+ * dans le cas contraire, on retourne le libellé des colonnes du tableau dans la
  * couleur spécifié par le paramètre $color
  */
 function elt($a, $t = "td", $color = "") {
