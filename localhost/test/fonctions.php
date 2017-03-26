@@ -304,3 +304,11 @@ function extractionInfo($col_element, $db_request, &$resultat) {
 
 	}
 }
+
+function boutonDeconnexion() {
+	?>
+	<form action="<?php echo $url_page ?>" method="GET" id="logout"> <!--	Bouton "Se déconnecter" -->
+		<br /><input type="submit" name="logout" id="logout" value="Se déconnecter" class='btn btn-danger btn-sm'/>
+	</form>
+	<?php
+}

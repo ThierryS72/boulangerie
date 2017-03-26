@@ -8,7 +8,7 @@
  * @author Thierry Sémon <thierry.semon@space.unibe.ch>
  */
 
-error_reporting(0); //Pour visualisation finale  
+error_reporting(0); //Pour visualisation finale
 
 session_start(); // a placer en tout premier, avant HTML car utilise un cookie
 
@@ -65,6 +65,12 @@ if(validation_utilisateur())
 
 	if ($utilisateur['type'] == "manager")
 	{
+		if (isset($_REQUEST['printpdf']))
+		{
+			header("location: listepdf2.php");
+			exit;
+		}
+
 		if(isset($_POST['nom']) && isset($_POST['quantite']) && isset($_POST['prix']))
 		{
 			//Mise à jour base de donnée produits si changement
@@ -102,7 +108,7 @@ if(validation_utilisateur())
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 		<style type="text/css">
       main { padding: 60px; }
-    </style>	
+    </style>
 		<title>Liste des produits</title>
 	</head>
 	<body>
@@ -153,17 +159,15 @@ if(validation_utilisateur())
 			$parametre = 0;
 			// Affichage contenu de la table produits disponibles
 			?>
-			<form action="<?php echo $url_page ?>" method="GET" id="logout">
-				<br /><input type="submit" name="logout" id="logout" value="Se déconnecter" class='btn btn-danger btn-sm'/>
-			</form> <br/>
+			<form action="<?php echo $url_page ?>" method="GET" id="printpdf"> <!--	Bouton "Imprimer les commandes de la journée" -->
+				<br /><input type="submit" name="printpdf" id="printpdf" value="Imprimer les commandes de la journée" class='btn btn-success'/>
+			</form>
 
 		<?php
+			boutonDeconnexion();
+			echo "<br/>";
 			echo makeTable($type, $col_nom, $col_element, $db->query($sql_query), $color, $url_page, $parametre);
-			?>
-			<form action="<?php echo $url_page ?>" method="GET" id="logout">
-				<br /><input type="submit" name="logout" id="logout" value="Se déconnecter" class='btn btn-danger btn-sm'/>
-			</form>
-			<?php
+			boutonDeconnexion();
 		}
 		else //Les clients
 		{
@@ -292,6 +296,7 @@ if(validation_utilisateur())
 					} else {
 						echo "<br/>Vous devez choisir un article au minimum pour pouvoir passer commande";
 					}
+					boutonDeconnexion();
 			}
 		}
 		?>

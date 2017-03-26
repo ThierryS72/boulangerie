@@ -4,34 +4,23 @@ require "fonctions.php";
  * Liste des principales query pour l'extraction des données pour imprimer le pdf des commandes
  */
  // Extraire la liste du total des produits commandés
- $sql_query = ("SELECT sum(quantite), produit, time_stamp
-               FROM boulangerie.commandes
-               WHERE time_stamp LIKE'" . aujourdhui() . "%'
-               group by produit
-               order by produit asc");
 
-// Extraire la liste des entreprises dont les employés ont passé commande aujourd'hui
-$sql_query = ("SELECT DISTINCT entreprise
-              FROM boulangerie.commandes WHERE time_stamp LIKE '" . aujourdhui() . "%'
-              order by entreprise asc");
+session_start();
 
-// Extraire la liste des employés d'une entreprise qui a passé commande aujourd'hui
-$sql_query = ("SELECT nom, prenom
-              FROM boulangerie.commandes
-              WHERE time_stamp LIKE '" . aujourdhui() . "%'
-              group by nom, prenom
-              order by nom asc");
+ if (!isset($_SESSION["is_auth"])) {
+ 	header("location: login.php");
+ 	exit;
+ }
+ else if (isset($_REQUEST['logout']) && $_REQUEST['logout'] == true) {
+ 	// On peut en tout temps faire un logout en envoyant un "logout" qui va déselectionner le flag is_auth.
+ 	// On peut aussi détruire la session si désiré.
+ 	unset($_SESSION['is_auth']);
+ 	session_destroy();
 
-// Extraire la liste des produits commandés par un employé aujourd'hui
-$sql_query = ("SELECT sum(quantite), produit, prix_total, time_stamp
-              FROM boulangerie.commandes
-              WHERE nom = 'toto'
-              AND prenom = 'cutugno'
-              AND entreprise = 'Entreprise 1'
-              AND time_stamp LIKE'" . aujourdhui() . "%'
-              group by produit
-              order by produit asc");
-
+ 	// Après le logout, renvoie sur la page login.php
+ 	header("location: login.php");
+ 	exit;
+ }
 
 ob_start();
 ?>
@@ -41,16 +30,6 @@ ob_start();
   <h1>Liste des commandes du <?php echo htmlentities(aujourdhui())?></h1><br/>
 <?php
 
-// $utilisateur['nom'] = $_SESSION['user_nom'];
-// $utilisateur['prenom'] = $_SESSION['user_prenom'];
-// $utilisateur['entreprise'] = $_SESSION['user_entreprise'];
-// $utilisateur['type'] = $_SESSION['user_level']; //"manager" ou "client"
-
-$utilisateur['nom'] = 'toto';
-$utilisateur['prenom'] = 'cutugno';
-$utilisateur['entreprise'] = 'Entreprise 1';
-$utilisateur['type'] = 'manager'; //"manager" ou "client"
-
 $db = db_connect();
 
   $type = 2;
@@ -58,12 +37,6 @@ $db = db_connect();
   $col_element = array('sum(quantite)', 'produit', 'time_stamp');
   $color = '"#CCCCFF"';
   $parametre = 0;
-
-  // $sql_query = ("SELECT " . join(", ", $col_element) . " FROM boulangerie.commandes
-  //               WHERE nom = '" . $utilisateur['nom'] . "'
-  //               AND prenom = '" . $utilisateur['prenom'] . "'
-  //               AND entreprise = '" . $utilisateur['entreprise'] . "'
-  //               AND time_stamp LIKE'" . aujourdhui() . "%'");
 
   $sql_query = ("SELECT sum(quantite), produit, time_stamp
                 from boulangerie.commandes
@@ -130,6 +103,9 @@ foreach ($entreprise as $key1 => $value1) {
 
 <?php
 $content = ob_get_clean();
-
+/**
+ * Impression de $sontent au format pdf et destruction de la session
+ */
 printpdf($content);
-// echo $content;
+unset($_SESSION['is_auth']);
+session_destroy();
