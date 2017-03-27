@@ -44,22 +44,6 @@ function db_connect()
 }
 
 /**
- * Fonction de validation des utilisateurs
- *
- * Cette fonction retoure "true (1)" si l'utilisateur est valide. Actuellement
- * figé sur "true".
- *
- * @return "true" ou "false" = 1 ou 0
- *
- * @todo utiliser le résultat du login ou programmer différement pour qu'elle
- * réagisse à une condition et ne soit plus figée sur "true"
- */
-function validation_utilisateur()
-{
-	return 1;
-}
-
-/**
  * Fonction contrôle de temps
  *
  * Si un utilisateur se connecte en dehors des heures de commandes
@@ -91,7 +75,6 @@ function aujourdhui()
 {
 	$maintenant = date("Y-m-d");
 	return $maintenant;
-	// echo $aujourdhui . "<br/>";
 }
 
 /**
@@ -232,7 +215,7 @@ function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_pag
 }
 
 /**
-/* DESCRIPTION
+ * DESCRIPTION
  * @return retourne autant d'éléments de type $t que désirés avec les
  * valeurs du tableau $a dans le cas ou le paramètre $color n'est pas spécifié
  * dans le cas contraire, on retourne le libellé des colonnes du tableau dans la
@@ -254,7 +237,7 @@ function elt($a, $t = "td", $color = "") {
 }
 
 /**
-/* DESCRIPTION
+ * DESCRIPTION
  * @return retourne les valeurs du tableau $a dans l'ordre du tableau $c
  */
 function getcol($a, $c) {
@@ -279,7 +262,7 @@ function printpdf($content) {
 	  $html2pdf = new HTML2PDF('P','A4','fr');
 	  $html2pdf->SetDefaultFont('Arial');
 	  $html2pdf->WriteHTML($content, isset($_GET['vuehtml']));
-	  $html2pdf->pdf->IncludeJS('print(true)'); // Devrait afficher les options d'impressions - ne semble pas fonctionner avec Safari sur Mac
+	  $html2pdf->pdf->IncludeJS('print(true)'); // Affiche les options d'impressions - ne semble pas fonctionner avec Safari sur Mac
 	  $html2pdf->pdf->SetDisplayMode('fullpage'); // Affichage d'une page entière
 	  $html2pdf->Output('testpdf.pdf');
 	}
@@ -304,10 +287,45 @@ function extractionInfo($col_element, $db_request, &$resultat) {
  * et envoie un GET logout qui va déselectionner le flag is_auth et détruire
  * les informations de session et ainsi appeler la page login.php
  */
-function boutonDeconnexion() {
-	?>
-	<form action="<?php echo $url_page ?>" method="GET" id="logout"> <!--	Bouton "Se déconnecter" -->
-		<br /><input type="submit" name="logout" id="logout" value="Se déconnecter" class='btn btn-danger btn-sm'/>
-	</form>
-	<?php
+// function boutonDeconnexion() {
+// 	? >
+// 	<form action="<?php echo $url_page ? >" method="GET" id="logout"> <!--	Bouton "Se déconnecter" -->
+// 		<br /><input type="submit" name="logout" id="logout" value="Se déconnecter" class='btn btn-danger btn-sm'/>
+// 	</form>
+// 	<?php
+// }
+/**
+ * Classe bouton
+ *
+ * Cette classes sert à construire les boutons "Se déconnecter" et "Passer commande"
+ *
+ * @param $methode la méthode POST ou GET
+ * @param $diName l'id et le name
+ * @param $textValue le texte afficher sur le bouton
+ * @param $typeClasse le type de classe bootstrap
+ *
+ * @return balises et argument pour afficher le bouton désiré
+ */
+class bouton {
+	private $methode;
+	private $idName;
+	private $textValue;
+	private $typeClasse;
+
+	function __construct($methode, $idName, $textValue, $typeClasse) {
+		$this->methode = $methode;
+		$this->idName = $idName;
+		$this->textValue = $textValue;
+		$this->typeClasse = $typeClasse;
+	}
+
+	function __destruct(){
+	}
+
+	public function get_bouton() {
+		return '<form action="' . $url_page . '" method="' . $this->methode . '" id="' . $this->idName . '">
+			<br /><input type="submit" name="' . $this->idName . '" id="' . $this->idName . '" value="' . $this->textValue . '" class=\'' . $this->typeClasse . '\'/>
+		</form>
+		';
+	}
 }

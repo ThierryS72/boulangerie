@@ -2,19 +2,16 @@
 /**
  * Page contenant les informations de configuration de la base de donnée
  *
- * Actuellement, cette page est "contournée", car il y a un souci avec db_connect()
- *
- * @todo voir problème décrit dans la fonction db_connect() pour rétablir cette page
+ * Adapter les valeurs ci-dessous en fonction de la base de donnée créée
+ * chez l'hébergeur
  *
  * @author André Mooser <andre.mooser@bluewin.ch>
  * @author Thierry Sémon <thierry.semon@space.unibe.ch>
  */
-
-// configuration
-$host = "localhosti";
-$dbname = "boulangeriei";
+$host = "localhost";
+$dbname = "boulangerie";
 $user = "root";
-$pw = ""; // � changer
+$pw = "root"; // � changer
 
 // ne pas fermer le php pour
 // eviter les newlines HTML

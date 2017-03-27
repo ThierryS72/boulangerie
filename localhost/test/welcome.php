@@ -43,7 +43,7 @@ else
 	unset ($commandes);
 	unset($_SESSION['commandes']);
 }
-// echo"<br/>Etat de la commande: " . count($commandes) . "<br/>";
+
 
 /*
 - Faire authentification avant d'avoir accès aux données (tables)
@@ -52,8 +52,8 @@ else
 
 
 
-if(validation_utilisateur())
-{
+// if(validation_utilisateur())
+// {
 	// @TODO: Extraire les spécifications de utilisateurs de base de donnée utilisateur dans validation_utilisateur()
 	// Test: mockup qui contient les spécifications des utilisateurs
 	$utilisateur['nom'] = $_SESSION['user_nom'];
@@ -74,7 +74,7 @@ if(validation_utilisateur())
 		if(isset($_POST['nom']) && isset($_POST['quantite']) && isset($_POST['prix']))
 		{
 			//Mise à jour base de donnée produits si changement
-			$sql_query = "UPDATE boulangerie.produits SET quantite = ?, prix = ? , time_stamp = ? WHERE nom = ?";
+			$sql_query = "UPDATE produits SET quantite = ?, prix = ? , time_stamp = ? WHERE nom = ?";
 			$st = $db->prepare($sql_query);
 			$p = array($_POST['quantite'], $_POST['prix'], date('Y-m-d H:i:s'), $_POST['nom']);
 			$st->execute($p);
@@ -93,11 +93,11 @@ if(validation_utilisateur())
 			echo "Désolé les commandes ne sont possibles qu'entre 6 heures et 8 heures du matin!";
 		}
 	}
-}
-	else
-	{
-		echo 'Utilisateur non-valide!';
-	}
+// }
+// 	else
+// 	{
+// 		echo 'Utilisateur non-valide!';
+// 	}
 	?>
 
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -158,16 +158,17 @@ if(validation_utilisateur())
 			$color = '"#CCCCFF"';
 			$parametre = 0;
 			// Affichage contenu de la table produits disponibles
-			?>
-			<form action="<?php echo $url_page ?>" method="GET" id="printpdf"> <!--	Bouton "Imprimer les commandes de la journée" -->
-				<br /><input type="submit" name="printpdf" id="printpdf" value="Imprimer les commandes de la journée" class='btn btn-success'/>
-			</form>
-
-		<?php
-			boutonDeconnexion();
+			// Bouton imprimer les commandes de la journée sous forme pdf
+			$bouton = new bouton("get", "printpdf", "Imprimer les commandes de la journée", "btn btn-success");
+			echo $bouton->get_bouton();
+			// Bouton Se déconnecter
+			$bouton = new bouton("get", "logout", "Se déconnecter", "btn btn-danger btn-sm");
+			echo $bouton->get_bouton();
 			echo "<br/>";
 			echo makeTable($type, $col_nom, $col_element, $db->query($sql_query), $color, $url_page, $parametre);
-			boutonDeconnexion();
+			// Bouton se déconnecter place au bas du tableau
+			$bouton = new bouton("get", "logout", "Se déconnecter", "btn btn-danger btn-sm");
+			echo $bouton->get_bouton();
 		}
 		else //Les clients
 		{
@@ -274,21 +275,21 @@ if(validation_utilisateur())
 //Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?
 					if(count($commandes)!= 0)
 					{
-					$type = 3;
-					$col_nom = array('TimeStamp', 'Nom du produit', 'Quantité', 'Prix unitaire', 'Prix total', 'action');
-					$col_element = array('quantite', 'produit', 'prix_total');
-					$color = '"#CCCCFF"';
-					echo makeTable($type, $col_nom, $col_element, $db, $color, $url_page, $commandes);
-						?>
-						<form action="<?php echo $url_page ?>" method="post" id="passercommande">
-						<br /><input type="submit" name="passercommande" id="passercommande" value="Passer commande" class='btn btn-info btn-sm'/>
-					</form>
-					<?php
+						$type = 3;
+						$col_nom = array('TimeStamp', 'Nom du produit', 'Quantité', 'Prix unitaire', 'Prix total', 'action');
+						$col_element = array('quantite', 'produit', 'prix_total');
+						$color = '"#CCCCFF"';
+						echo makeTable($type, $col_nom, $col_element, $db, $color, $url_page, $commandes);
+						// Bouton Passer commande
+						$bouton = new bouton("post", "passercommande", "Passer commande", "btn btn-info btn-sm");
+						echo $bouton->get_bouton();
 
 					} else {
 						echo "<br/>Vous devez choisir un article au minimum pour pouvoir passer commande";
 					}
-					boutonDeconnexion();
+					// Bouton Se déconnecter
+					$bouton = new bouton("get", "logout", "Se déconnecter", "btn btn-danger btn-sm");
+					echo $bouton->get_bouton();
 			}
 		}
 		?>
