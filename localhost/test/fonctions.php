@@ -15,29 +15,23 @@
 /**
  * Fonction connexion à la base de données
  *
- * Permet de se connecter à la base de donnée boulangerie avec le
- * nom de login "root" et le mot de passe "root" pour MAMP sur Mac
- * ou "" pour une utilisation sur pc
+ * Permet de se connecter à la base de donnée boulangerie
+ * en récupérant les informations depuis DB_config.php
  *
- * @todo Problème avec $host et$dbname: on peux mettre n'importe quoi dans
- * ces 2 variables et la connexion se fait quand même -> voir pourquoi ???
  */
+require "DB_conf.php";
 function db_connect()
 {
-	// global $host;
-	// global $dbname;
-	// global $user;
-	// global $pw;
-	$host = "localhost";
-	$dbname = "boulangerie";
-	$user = "root";
-	$pw = "root";
+	global $host;
+	global $dbname;
+	global $user;
+	global $pw;
 
 	try
 	{
 		// connection à base de donnée PDO
-		// les infos de connexion ci-dessous dans un fichier séparé DB_conf.php
-		$db = new PDO ("mysql:host = $host; dbname = $dbname", $user, $pw, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+		// les infos de connexion ci-dessous viennent du fichier séparé DB_conf.php
+		$db = new PDO ("mysql:host=$host; dbname=$dbname", $user, $pw, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		return $db;
 	}
@@ -114,7 +108,7 @@ function aujourdhui()
  */
 function recuperationproduits($db)
 {
-	$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
+	$result = $db->query('SELECT * FROM produits where quantite != 0');
 	while($row = $result->fetch(PDO::FETCH_ASSOC))
 	{
 		$produitnom = $row['nom'];
@@ -136,14 +130,12 @@ function recuperationproduits($db)
  * @return $produitPossible = produits existants moins les produits déjà
  * commandés par tous les clients
  *
- * @todo récuper la date du jour et ne soustaire que les produits commandés
- * ce jour
  *
  */
 function soustraireproduitscommandes($db, &$produitPossible)
 {
 	foreach ($produitPossible as $key => $value) {
-		$result = $db->query('SELECT * FROM boulangerie.commandes where produit ="' . $key . '" AND time_stamp LIKE"' . aujourdhui() . '%"');
+		$result = $db->query('SELECT * FROM commandes where produit ="' . $key . '" AND time_stamp LIKE"' . aujourdhui() . '%"');
 		while($row = $result->fetch(PDO::FETCH_ASSOC))
 		{
 			$produitPossible[$key]['quantite'] = $produitPossible[$key]['quantite'] - $row['quantite'];
@@ -287,7 +279,7 @@ function printpdf($content) {
 	  $html2pdf = new HTML2PDF('P','A4','fr');
 	  $html2pdf->SetDefaultFont('Arial');
 	  $html2pdf->WriteHTML($content, isset($_GET['vuehtml']));
-	  $html2pdf->pdf->IncludeJS('print(true)'); // Devrait afficher les options d'impressions - ne semble pas fonctionner sur Mac
+	  $html2pdf->pdf->IncludeJS('print(true)'); // Devrait afficher les options d'impressions - ne semble pas fonctionner avec Safari sur Mac
 	  $html2pdf->pdf->SetDisplayMode('fullpage'); // Affichage d'une page entière
 	  $html2pdf->Output('testpdf.pdf');
 	}
@@ -305,6 +297,13 @@ function extractionInfo($col_element, $db_request, &$resultat) {
 	}
 }
 
+/**
+ * Cette fonction affiche un bouton "Déconnexion"
+ *
+ * Ce bouton déconnexion sera affiché dans la vue client ou dans la vue manager
+ * et envoie un GET logout qui va déselectionner le flag is_auth et détruire
+ * les informations de session et ainsi appeler la page login.php
+ */
 function boutonDeconnexion() {
 	?>
 	<form action="<?php echo $url_page ?>" method="GET" id="logout"> <!--	Bouton "Se déconnecter" -->

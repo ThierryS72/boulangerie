@@ -39,7 +39,7 @@ $db = db_connect();
   $parametre = 0;
 
   $sql_query = ("SELECT sum(quantite), produit, time_stamp
-                from boulangerie.commandes
+                from commandes
                 WHERE time_stamp LIKE'" . aujourdhui() . "%'
                 group by produit
                 order by produit asc");
@@ -51,7 +51,7 @@ echo "<h2>Liste des commandes par entreprise</h2>";
 
 // Extraire la liste des entreprises dont les employés ont passé commande aujourd'hui
 $sql_query = ("SELECT DISTINCT entreprise
-              FROM boulangerie.commandes WHERE time_stamp LIKE '" . aujourdhui() . "%'
+              FROM commandes WHERE time_stamp LIKE '" . aujourdhui() . "%'
               order by entreprise asc");
 
 $col_element = array('entreprise');
@@ -64,7 +64,7 @@ foreach ($entreprise as $key1 => $value1) {
 
     // Extraire la liste des employés d'une entreprise qui a passé commande aujourd'hui
     $sql_query = ("SELECT nom, prenom
-                  FROM boulangerie.commandes
+                  FROM commandes
                   WHERE time_stamp LIKE '" . aujourdhui() . "%'
                   AND entreprise = '" . $afficherEntreprise . "'
                   group by nom, prenom
@@ -78,7 +78,7 @@ foreach ($entreprise as $key1 => $value1) {
 
       // Extraire la liste des produits commandés par un employé aujourd'hui
       $sql_query = ("SELECT sum(quantite), produit, prix_total, time_stamp
-                    FROM boulangerie.commandes
+                    FROM commandes
                     WHERE nom = '" . $value10['0'] . "'
                     AND prenom = '" . $value10['1'] . "'
                     AND entreprise = '" . $afficherEntreprise . "'

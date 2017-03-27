@@ -32,7 +32,7 @@
 			// Connexion à la base de données et sélection de l'utilisateur sur la base de l'adresse mail fournie.
 			// Extraction du mot de passe et des autres informations nécessaires pour la session.
 $db = db_connect();
-      $result = $db->query("SELECT id, email, password, nom, prenom, entreprise, level FROM boulangerie.utilisateurs WHERE email = '" . $email . "'");
+      $result = $db->query("SELECT id, email, password, nom, prenom, entreprise, level FROM utilisateurs WHERE email = '" . $email . "'");
       $row = $result->fetch(PDO::FETCH_ASSOC);
 			// Si les informations utilisateurs ont été trouvées, comparaison du mot de passe fourni.
 			// En cas de succès, création de variables de session pour l'utilisateur et d'un flag d'authorisation.
@@ -81,7 +81,7 @@ $db = db_connect();
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<style type="text/css">
 		main { padding: 60px; }
-	</style>	
+	</style>
 	<title>Liste des produits</title>
 </head>
 <main class="container">

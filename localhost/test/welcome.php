@@ -86,7 +86,7 @@ if(validation_utilisateur())
 		{
 			// Récupère contenu de la table produits dont la quantité est supérieure à 0
 			$col_element = array('nom', 'prix', 'quantite');
-			$sql_query = ("SELECT " . join(", ", $col_element) . " FROM boulangerie.produits where quantite != 0");
+			$sql_query = ("SELECT " . join(", ", $col_element) . " FROM produits where quantite != 0");
 		}
 		else
 		{
@@ -124,7 +124,7 @@ if(validation_utilisateur())
 			$modifier = 0;
 			if (isset($_GET['modifier']) && is_scalar($_GET['modifier']))
 			{
-				$st = $db->prepare("SELECT nom, prix, quantite FROM boulangerie.produits WHERE (id = ?)");
+				$st = $db->prepare("SELECT nom, prix, quantite FROM produits WHERE (id = ?)");
 				if ($st && $st->execute(array($_GET['modifier'])))
 				{
 					$row = $st->fetch(PDO::FETCH_ASSOC);
@@ -151,7 +151,7 @@ if(validation_utilisateur())
 			<?php
 			}
 			// Récupère contenu de la table produits
-			$sql_query = ("SELECT * FROM boulangerie.produits");
+			$sql_query = ("SELECT * FROM produits");
 			$col_nom = array('nom du produit', 'prix unitaire', 'nombre à disposition', 'action');
 			$col_element = array('nom', 'prix', 'quantite');
 			$type = 1;
@@ -178,7 +178,7 @@ if(validation_utilisateur())
 							{
 								$commandes = $_SESSION['commandes'];
 								foreach ($commandes as $TimeStamp => $commande) {
-									$sql_query = "INSERT INTO boulangerie.commandes( nom, prenom, entreprise,produit, quantite, prix_total, time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?)";
+									$sql_query = "INSERT INTO commandes( nom, prenom, entreprise,produit, quantite, prix_total, time_stamp) VALUES (?, ?, ?, ?, ?, ?, ?)";
 								try {
 									$id = $db->LastInsertId();
 									$st = $db->prepare($sql_query);
@@ -191,7 +191,6 @@ if(validation_utilisateur())
 								}
 
 								};
-								// echo aujourdhui() . "<br/>";
 								echo "Commande du ". aujourdhui() . " effectuée avec succès<br/><br/>";
 								$type = 2;
 								$col_nom = array('quantité commandée', 'nom du produit', 'prix total');
@@ -199,7 +198,7 @@ if(validation_utilisateur())
 								$color = '"#CCCCFF"';
 								$parametre = 0;
 
-								$sql_query = ("SELECT " . join(", ", $col_element) . " FROM boulangerie.commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "' AND time_stamp LIKE'" . aujourdhui() . "%'");
+								$sql_query = ("SELECT " . join(", ", $col_element) . " FROM commandes WHERE nom = '" . $utilisateur['nom'] . "' AND prenom = '" . $utilisateur['prenom'] . "' AND entreprise = '" . $utilisateur['entreprise'] . "' AND time_stamp LIKE'" . aujourdhui() . "%'");
 
 								echo '<p><strong>Liste des produits commandés:</strong ></p>';
 								echo makeTable($type, $col_nom, $col_element, $db->query($sql_query), $color, $url_page, $parametre);
@@ -214,19 +213,12 @@ if(validation_utilisateur())
 
 
 				// Affichage contenu de la commande en cours
-				$result = $db->query('SELECT * FROM boulangerie.produits where quantite != 0');
+				$result = $db->query('SELECT * FROM produits where quantite != 0');
 				while($row = $result->fetch(PDO::FETCH_ASSOC))
 				{
 					$clé = $row['nom'];
 					$valeur = $row['quantite'];
 				}
-
-				/* Compteur de session utilisé pour des tests
-				echo"ceci est le compteur de session:" ;
-				print_r($_SESSION['compteur']);
-				$_SESSION['compteur'] = $_SESSION['compteur'] + 1;
-				*/
-
 
 				/* On récupère si il existe le nom du produit commandé par le formulaire */
 				$prodcommande = isset($_POST['produitform'])?$_POST['produitform']:null;
