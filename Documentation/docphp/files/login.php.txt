@@ -7,16 +7,22 @@
  * @todo mettre en oeuvre le hashage du mot de passe -> voir comment créer les mots
  * de passe hashés dans la table de la base de données.
  *
- * @author André Mooser <andre.mooser@bluewin.ch>
- * @author Thierry Sémon <thierry.semon@space.unibe.ch>
+ * PHP version 5
+ *
+ * @category  none
+ * @package   none
+ * @author    André Mooser <andre.mooser@bluewin.ch>
+ * @author    Thierry Sémon <thierry.semon@space.unibe.ch>
+ * @copyright 2017 André Mooser et Thierry Sémon
+ * @license   http://www.php.net/license/3_01.txt  PHP License 3.01
+ * @link      www.anjumo.ch/projetphp
  */
 
-	// Initialisation de la session.
+	/* Initialisation de la session. */
 	session_start();
 
   require "fonctions.php";
   require "DB_conf.php";
-  // require "welcome.php";
 
   $url_page = $_SERVER['PHP_SELF'];
 

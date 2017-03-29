@@ -1,13 +1,21 @@
 <?php
 /**
- * create_password.php est utilisÈ afin de hacher le mot de passe
- * Une fois hachÈ, il est incororporÈ manuellement dans la base de donnÈe
+ * create_password.php est utilis√© afin de hacher le mot de passe
+ * Une fois hach√©, il est incororporÔøΩ manuellement dans la base de donn√©es
  * utilisateur
- * @author AndrÈ Mooser <andre.mooser@bluewin.ch>
- * @author Thierry SÈmon <thierry.semon@space.unibe.ch>
- * @todo crÈer l'inteface pour que le manager puisse ajouter et modifier 
- * les utilisateurs ‡ sa guise
-*/
+ * PHP version 5
+ *
+ * @category  none
+ * @package   none
+ * @author    Andr√© Mooser <andre.mooser@bluewin.ch>
+ * @author    Thierry S√©mon <thierry.semon@space.unibe.ch>
+ * @copyright 2017 Andr√© Mooser et Thierry S√©mon
+ * @license   http://www.php.net/license/3_01.txt  PHP License 3.01
+ * @link      www.anjumo.ch/projetphp
+ *
+ * @todo cr√©er l'inteface pour que le manager puisse ajouter et modifier
+ * les utilisateurs √† sa guise
+ */
 $salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
 $salt = base64_encode($salt);
 $salt = str_replace('+', '.', $salt);
@@ -16,7 +24,7 @@ $hash = crypt('andre', '$2y$10$'.$salt.'$');
 echo $hash;
 echo "</br>";
 
-//VÈrification
+//V√©rification
 if (password_verify('andre', $hash)) {
     echo 'Le mot de passe est valide !';
 } else {
