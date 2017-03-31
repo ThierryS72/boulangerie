@@ -82,4 +82,4 @@ INSERT INTO utilisateurs(nom, prenom, entreprise, email, password, level) VALUES
 INSERT INTO utilisateurs(nom, prenom, entreprise, email, password, level) VALUES('Varta', 'Tata', 'Entreprise 2', 'tata@tata.ch', '$2y$10$2bGf7Ps4uyww22J34LldTu30lXwHisOMs/1/cx9piNEFdRdlx5NRO', 'client');
 INSERT INTO utilisateurs(nom, prenom, entreprise, email, password, level) VALUES('Leriquiqui', 'Titi', 'Boulangerie', 'titi@titi.ch', '$2y$10$9M3xbCaO6bVzgLMtyQ9EBOT9/8GxedZ4ijTDC.FP7rGXngtxOALEa', 'manager');
 INSERT INTO utilisateurs(nom, prenom, entreprise, email, password, level) VALUES('Lapierre', 'Albert', 'Entreprise 3', 'albert@albert.ch', '$2y$10$q58xbuaQsMffC3r2J8kdX./7z3vpWhbMBtgFBBsdz6jfuvWbyfWZO', 'client');
-INSERT INTO utilisateurs(nom, prenom, entreprise, email, password, level) VALUES('Mooser', 'André', 'Entreprise 1', 'andre@andre.ch', '$2y$10$3wh9gvPPKT1X2fTdeYtqP.pO3XqP4B2d9WgiuQ5ps1lrjEXRHF4hG', 'client');
+INSERT INTO utilisateurs(nom, prenom, entreprise, email, password, level) VALUES('Mooser', 'André', 'Entreprise 1', 'andre.mooser@bluewin.ch', '$2y$10$3wh9gvPPKT1X2fTdeYtqP.pO3XqP4B2d9WgiuQ5ps1lrjEXRHF4hG', 'client');

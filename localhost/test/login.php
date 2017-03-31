@@ -91,13 +91,16 @@ if (isset($_POST['login-submit'])) {
 <body>
 	<main class="container">
 		<h2>Login et mots de passe pour les tests</h2><br/>
-		<p>entreprise, email, mot de passe, type d'utilisateur</p>
-		<p>'Moulin SA', 'thierry.semon@space.unibe.ch', 'thierry', 'manager'</p>
-		<p>'Entreprise 1', 'toto@toto.ch', 'toto', 'client'</p>
-		<p>'Entreprise 2', 'tata@tata.ch', 'tata', 'client'</p>
-		<p>'Boulangerie', 'titi@titi.ch', 'titi', 'manager'</p>
-		<p>'Entreprise 3', 'albert@albert.ch', 'albert', 'client'</p>
-		<p>'Entreprise 1', 'andre@andre.ch', 'andre', 'client'</p><br/>
+		<table class='table table-bordered table-striped table-hover table-condensed'>
+			<tr><th>email</th><th>type d'utilisateur</th><th>entreprise</th></tr>
+			<tr><td>thierry.semon@space.unibe.ch</td><td>manager</td><td>Moulin SA</td></tr>
+			<tr><td>toto@toto.ch</td><td>client</td><td>Entreprise 1</td></tr>
+			<tr><td>tata@tata.ch</td><td>client</td><td>Entreprise 2</td></tr>
+			<tr><td>titi@titi.ch</td><td>manager</td><td>Boulangerie</td></tr>
+			<tr><td>albert@albert.ch</td><td>client</td><td>Entreprise 3</td></tr>
+			<tr><td>andre.mooser@bluewin.ch</td><td>client</td><td>Entreprise 1</td></tr>
+		</table>
+		<p>Les mots de passe se trouvent sur la forge. Ou les demander à Thierry ou André</p><br/>
 		<form method="post" action="<?php echo $url_page ?>" class="form-inrow">
 			<div class="login-body form-inline">
 				<?php

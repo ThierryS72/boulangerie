@@ -36,11 +36,9 @@ else if (isset($_REQUEST['logout']) && $_REQUEST['logout'] == true) {
 	exit;
 }
 
-
 require "fonctions.php";
 require "DB_conf.php";
 $url_page = $_SERVER['PHP_SELF'];
-
 
 if (isset($_SESSION['commandes'])) {
 	$commandes = $_SESSION['commandes'];
@@ -50,8 +48,6 @@ else
 	unset ($commandes);
 	unset($_SESSION['commandes']);
 }
-
-
 
 $utilisateur['nom'] = $_SESSION['user_nom'];
 $utilisateur['prenom'] = $_SESSION['user_prenom'];
@@ -84,14 +80,7 @@ else
 // Si client
 {
 	// Contrôle si le client effectue la commande durant l'horaire défini
-	if (check_time() && ($utilisateur['type'] = "client"))
-	{
-		// Récupère contenu de la table produits dont la quantité est supérieure à 0
-		// $col_element = array('nom', 'prix', 'quantite');
-		// $sql_query = ("SELECT " . join(", ", $col_element) . "
-		// 							FROM produits where quantite != 0");
-	}
-	else
+	if (!check_time())
 	{
 		echo "Désolé les commandes ne sont possibles qu'entre 6 heures et 8 heures du matin!";
 		unset($_SESSION['is_auth']);
@@ -122,7 +111,6 @@ else
 			?>
 			<div class="bg-info">Pour les produits non disponible mettre "nombre à disposition" à 0!</div>
 			<?php
-			$modifier = 0;
 			if (isset($_GET['modifier']) && is_scalar($_GET['modifier']))
 			{
 				$st = $db->prepare("SELECT nom, prix, quantite
@@ -153,14 +141,13 @@ else
 				</form>
 				<?php
 			}
-			// Récupère contenu de la table produits
+			// Récupère le contenu de la table produits
 			$sql_query = ("SELECT * FROM produits");
 			$col_nom = array('nom du produit', 'prix unitaire', 'nombre à disposition', 'action');
 			$col_element = array('nom', 'prix', 'quantite');
 			$type = 1;
 			$color = '"#CCCCFF"';
 			$parametre = 0;
-			// Affichage contenu de la table produits disponibles
 			// Bouton imprimer les commandes de la journée sous forme pdf
 			$bouton = new bouton("GET", "printpdf", "Imprimer les commandes de la journée", "btn btn-success");
 			echo $bouton->get_bouton();
@@ -168,8 +155,9 @@ else
 			$bouton = new bouton("GET", "logout", "Se déconnecter", "btn btn-danger btn-sm");
 			echo $bouton->get_bouton();
 			echo "<br/>";
+			// Affichage contenu de la table produits disponibles
 			echo makeTable($type, $col_nom, $col_element, $db->query($sql_query), $color, $url_page, $parametre);
-			// Bouton se déconnecter place au bas du tableau
+			// Bouton se déconnecter placé au bas du tableau
 			$bouton = new bouton("get", "logout", "Se déconnecter", "btn btn-danger btn-sm");
 			echo $bouton->get_bouton();
 		}
@@ -189,13 +177,11 @@ else
 							$st = $db->prepare($sql_query);
 							$p = array($utilisateur['nom'], $utilisateur['prenom'], $utilisateur['entreprise'], $commande['produit'], $commande['quantite'], $commande['prix-total'], $TimeStamp);
 							$st->execute($p);
-
 						}
 						catch (PDOException $e) {
 							echo "insert error: " . htmlentities($e->getMessage()) . "<br/><br/>";
 						}
-
-					};
+					}
 					// Affichage des produits commandés par le client aujourd'hui
 					echo "Commande du ". aujourdhui() . " effectuée avec succès<br/><br/>";
 					$type = 2;
@@ -221,51 +207,37 @@ else
 				}
 				// Fin de l'écriture de la commande effectuée dans la table commandes
 
-
-
-				// Affichage contenu de la commande en cours
-				// $result = $db->query('SELECT *
-				// 											FROM produits
-				// 											where quantite != 0');
-				// while($row = $result->fetch(PDO::FETCH_ASSOC))
-				// {
-				// 	$clé = $row['nom'];
-				// 	$valeur = $row['quantite'];
-				// }
-
-				/* On récupère si il existe le nom du produit commandé par le formulaire */
+				/* On récupère si il existe le nom et la quantité du produit commandé par le formulaire */
 				$prodcommande = isset($_POST['produitform'])?$_POST['produitform']:null;
 				$quantitecommande = isset($_POST['quantiteform'])?$_POST['quantiteform']:null;
-
 				?>
-				<!-- Formulaire de commande des produits par les clients
+
+				<!-- Formulaire de commande des produits pour les clients
 				Récupération depuis la base de données de tous les produits possibles
 				Soustraction des produits déjà commandés aujourd'hui figurant dans la base de données
 				Soustraction des produits de la commande en cours-->
 				<form action="<?php echo $url_page ?>" method="post" id="commande" class="form-inline">
-					<!--<fieldset style="border: 3px double #333399"> -->
 					<legend>Sélectionnez un produit</legend>
 					<?php
 					$produitPossible = recuperationproduits($db);
 					soustraireproduitscommandes($db, $produitPossible);
 					soustraireproduitsencours($commandes, $produitPossible);
-					echo '<select class=form-control name="' . urlencode('produitform') . '" onchange="document.forms[\'commande\'].submit();">';
 					// Liste déroulante avec le nom des produits
+					echo '<select class=form-control name="' . urlencode('produitform') . '" onchange="document.forms[\'commande\'].submit();">';
 					echo '<option value="-1">- - - Choisissez un produit - - -</option>';
 					foreach($produitPossible as $key => $value)
 					{
 						echo '<option value="' . htmlentities($key) . '" ' . ((isset($prodcommande) && $prodcommande == $key)?" selected=\"selected\"":null) . '>' . htmlentities($key) . '</option>';
 					}
 					echo '</select>';
+					// Liste déroulante avec le nombre de produits restants
 					echo '<select class=form-control name="quantiteform">';
 					for ($i=1; $i < $produitPossible[$prodcommande]['quantite']+1; $i++) {
-						// Liste déroulante avec le nombre de produits restants
 						echo '<option value="' .htmlentities($i). '" ' . '>' . htmlentities($i) . '</option>';
 					}
 					echo '<br /><input type="submit" name="ok" id="ok" value="Sélectionner" class="btn btn-success btn-sm"/>';
 					echo '</select>';
 					?>
-					<!--</fieldset>-->
 				</form>
 				<br/>
 				<?php
@@ -284,10 +256,9 @@ else
 					$commandes[$currentTime] = array("produit" => $_POST["produitform"],
 					"quantite" => $_POST["quantiteform"],
 					"prix" => $produitPossible[$prodcommande]['prix'],
-					"prix-total" => $_POST["quantiteform"] * $produitPossible[$prodcommande]['prix']);
+					"prix-total" => number_format($_POST["quantiteform"] * $produitPossible[$prodcommande]['prix'], 2));
 					// sauvegarde dans la Session et affichage sous forme de tableau
 					$_SESSION['commandes'] = $commandes;
-
 				}
 
 				//Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?
@@ -301,7 +272,6 @@ else
 					// Bouton Passer commande
 					$bouton = new bouton("post", "passercommande", "Passer commande", "btn btn-info btn-sm");
 					echo $bouton->get_bouton();
-
 				} else {
 					echo "<br/>Vous devez choisir un article au minimum pour pouvoir passer commande";
 				}
