@@ -26,7 +26,7 @@ require "DB_conf.php";
  * Fonction connexion à la base de données
  *
  * Permet de se connecter à la base de donnée boulangerie
- * en récupérant les informations depuis DB_config.php
+ * en récupérant les informations depuis DB_conf.php
  *
  */
 function db_connect()
@@ -63,7 +63,8 @@ function db_connect()
  */
 function check_time()
 {
-	//Possibilité de passer des commandes entre 6h et 8h du matin
+	// Possibilité de passer des commandes entre 6h et 8h du matin
+	// réglé sur 23h pour les tests
 	$ouvert = 60000; //06:00:00
 	$ferme  = 230000; //08:00:00
 
@@ -121,17 +122,17 @@ function recuperationproduits($db)
 }
 
 /**
- * Fonction de soustraction des produits déjà commandés
+ * Fonction de soustraction des produits déjà commandés aujourdhui
  *
- * Reçoit les produits possibles (extraits dans recuperationproduits()) et
+ * Reçoit les produits possibles (extraits depuis recuperationproduits()) et
  * y soustrait pour chacun la quantité de produits qui figurent déjà dans
- * la table commandes et retourne les produits encore disponibles
+ * la table commandes pour aujourdhui et retourne les produits encore disponibles
  *
  * @param	string	$db
  * @param	array	$produitPossible
  *
  * @return array $produitPossible produits existants moins les produits déjà
- * commandés par tous les clients
+ * commandés par tous les clients, pour aujourdhui
  */
 function soustraireproduitscommandes($db, &$produitPossible)
 {
@@ -145,7 +146,7 @@ function soustraireproduitscommandes($db, &$produitPossible)
 }
 
 /**
- * Fonction qui soustrait les produits que l'on vient de choisir
+ * Fonction de soustraction des produits que l'on vient de choisir
  *
  * Reçoit les produits encore disponibles
  * (extraits de soustraireproduitscommandes) et y enlève les produits que
@@ -198,6 +199,9 @@ function a($u, $t, $a) {
  * Reçoit le type (1, 2 ou 3), le nom des colonnes, les éléments de chaque colonne
  * la ligne de requete à la base de données, la couleur de la ligne d'entete,
  * l'URL sur l'élément, les paramètres
+ * type 1 = avec affichage d'un lien/bouton "modifier" en fonction de l'id
+ * type 2 = avec affichage du prix total
+ * type 3 = avec affichage d'un lien/bouton "supprimer" en fonction de time_stamp
  *
  * @param	string	$type					type 1, 2 ou 3
  * @param	string	$col_nom			nom des colonnes
@@ -249,16 +253,18 @@ function makeTable($type, $col_nom, $col_element, $db_request, $color, &$url_pag
 }
 
 /**
- * DESCRIPTION
+ * Retourne les éléments d'un tableau
+ *
+ * Retourne autant d'éléments de type $t que désirés avec les
+ * valeurs du tableau $a dans le cas ou le paramètre $color n'est pas spécifié
+ * dans le cas contraire, on retourne le libellé des colonnes du tableau dans la
+ * couleur spécifié par le paramètre $color
  *
  * @param	string	$a
  * @param	string	$t
  * @param	string	$color	spécification de la couleur
  *
- * @return string retourne autant d'éléments de type $t que désirés avec les
- * valeurs du tableau $a dans le cas ou le paramètre $color n'est pas spécifié
- * dans le cas contraire, on retourne le libellé des colonnes du tableau dans la
- * couleur spécifié par le paramètre $color
+ * @return string
  */
 function elt($a, $t = "td", $color = "") {
    // use: accès aux variables de la fonction englobante, dès PHP 5.3
@@ -276,12 +282,12 @@ function elt($a, $t = "td", $color = "") {
 }
 
 /**
- * DESCRIPTION
+ * Retourne les valeurs du tableau $a dans l'ordre du tableau $c
  *
  * @param	array	$a
  * @param	array	$c
  *
- * @return array $x retourne les valeurs du tableau $a dans l'ordre du tableau $c
+ * @return array $x
  */
 function getcol($a, $c) {
    $x = array();
@@ -319,7 +325,7 @@ function printpdf($content) {
 /**
  * Fonction extraction des informations
  *
- * blabal
+ * Extrait le contenu d'une colonne particulière d'une table de la base de données
  *
  * @param	string	$col_element	élément de chaque colonne
  * @param	string	$db_request		requete à la base de données

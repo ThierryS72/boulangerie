@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1971882272"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-2087505442"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1971882272" class="accordion-body collapse in">
+            <div id="namespace-2087505442" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -244,7 +244,7 @@ trouvent.</p>
                 <pre class="signature" style="margin-right: 54px;">db_connect() </pre>
                 <p><em>Fonction connexion à la base de données</em></p>
                 <p>Permet de se connecter à la base de donnée boulangerie
-en récupérant les informations depuis DB_config.php</p>
+en récupérant les informations depuis DB_conf.php</p>
 
                 
                 
@@ -414,10 +414,10 @@ le prix.</p>
                 <h3 class=" ">soustraireproduitscommandes()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">soustraireproduitscommandes(string  <span class="argument">$db</span>, array  <span class="argument">$produitPossible</span>) : array</pre>
-                <p><em>Fonction de soustraction des produits déjà commandés</em></p>
-                <p>Reçoit les produits possibles (extraits dans recuperationproduits()) et
+                <p><em>Fonction de soustraction des produits déjà commandés aujourdhui</em></p>
+                <p>Reçoit les produits possibles (extraits depuis recuperationproduits()) et
 y soustrait pour chacun la quantité de produits qui figurent déjà dans
-la table commandes et retourne les produits encore disponibles</p>
+la table commandes pour aujourdhui et retourne les produits encore disponibles</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -437,7 +437,7 @@ la table commandes et retourne les produits encore disponibles</p>
                                     <h4>Returns</h4>
                     array
                                             &mdash; <p>$produitPossible produits existants moins les produits déjà
-commandés par tous les clients</p>
+commandés par tous les clients, pour aujourdhui</p>
                                     				
                             </article>
         </div>
@@ -468,7 +468,7 @@ commandés par tous les clients</p>
                 <h3 class=" ">soustraireproduitsencours()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">soustraireproduitsencours(array  <span class="argument">$commandes</span>, array  <span class="argument">$produitPossible</span>) : array</pre>
-                <p><em>Fonction qui soustrait les produits que l&#039;on vient de choisir</em></p>
+                <p><em>Fonction de soustraction des produits que l&#039;on vient de choisir</em></p>
                 <p>Reçoit les produits encore disponibles
 (extraits de soustraireproduitscommandes) et y enlève les produits que
 l'on sélectionne pour la commande, mais qui ne sont pas encore passés
@@ -584,7 +584,10 @@ d'URL GET.</p>
                 <p><em>Cette fonction crée un tableau &lt;table&gt; en fonction des paramètres reçus</em></p>
                 <p>Reçoit le type (1, 2 ou 3), le nom des colonnes, les éléments de chaque colonne
 la ligne de requete à la base de données, la couleur de la ligne d'entete,
-l'URL sur l'élément, les paramètres</p>
+l'URL sur l'élément, les paramètres
+type 1 = avec affichage d'un lien/bouton &quot;modifier&quot; en fonction de l'id
+type 2 = avec affichage du prix total
+type 3 = avec affichage d'un lien/bouton &quot;supprimer&quot; en fonction de time_stamp</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -659,8 +662,11 @@ l'URL sur l'élément, les paramètres</p>
                 <h3 class=" ">elt()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">elt(string  <span class="argument">$a</span>, string  <span class="argument">$t = &quot;td&quot;</span>, string  <span class="argument">$color = &quot;&quot;</span>) : string</pre>
-                <p><em>DESCRIPTION</em></p>
-                
+                <p><em>Retourne les éléments d&#039;un tableau</em></p>
+                <p>Retourne autant d'éléments de type $t que désirés avec les
+valeurs du tableau $a dans le cas ou le paramètre $color n'est pas spécifié
+dans le cas contraire, on retourne le libellé des colonnes du tableau dans la
+couleur spécifié par le paramètre $color</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -684,10 +690,6 @@ l'URL sur l'élément, les paramètres</p>
                 
                                     <h4>Returns</h4>
                     string
-                                            &mdash; <p>retourne autant d'éléments de type $t que désirés avec les
-valeurs du tableau $a dans le cas ou le paramètre $color n'est pas spécifié
-dans le cas contraire, on retourne le libellé des colonnes du tableau dans la
-couleur spécifié par le paramètre $color</p>
                                     				
                             </article>
         </div>
@@ -718,7 +720,7 @@ couleur spécifié par le paramètre $color</p>
                 <h3 class=" ">getcol()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">getcol(array  <span class="argument">$a</span>, array  <span class="argument">$c</span>) : array</pre>
-                <p><em>DESCRIPTION</em></p>
+                <p><em>Retourne les valeurs du tableau $a dans l&#039;ordre du tableau $c</em></p>
                 
 
                                     <h4>Parameters</h4>
@@ -738,7 +740,7 @@ couleur spécifié par le paramètre $color</p>
                 
                                     <h4>Returns</h4>
                     array
-                                            &mdash; <p>$x retourne les valeurs du tableau $a dans l'ordre du tableau $c</p>
+                                            &mdash; <p>$x</p>
                                     				
                             </article>
         </div>
@@ -816,7 +818,7 @@ couleur spécifié par le paramètre $color</p>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">extractionInfo(string  <span class="argument">$col_element</span>, string  <span class="argument">$db_request</span>, string  <span class="argument">$resultat</span>) : array</pre>
                 <p><em>Fonction extraction des informations</em></p>
-                <p>blabal</p>
+                <p>Extrait le contenu d'une colonne particulière d'une table de la base de données</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -914,7 +916,7 @@ couleur spécifié par le paramètre $color</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on March 28th, 2017 at 10:52.
+                    on March 31st, 2017 at 07:34.
                 </section>
             </section>
         </section>
