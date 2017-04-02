@@ -241,8 +241,6 @@ else
 				</form>
 				<br/>
 				<?php
-				//Début de la partie qui pourrait être placée avant le HTML, dans la partie client?
-
 				// Suppression de la ligne sélectionnée de l'array des commandes en cours
 				if (isset($_GET['supprimer']) && is_scalar($_GET['supprimer']))
 				{
@@ -260,8 +258,6 @@ else
 					// sauvegarde dans la Session et affichage sous forme de tableau
 					$_SESSION['commandes'] = $commandes;
 				}
-
-				//Fin de la partie qui pourrait être placée avant le HTML, dans la partie client?
 				if(count($commandes)!= 0)
 				{
 					$type = 3;
